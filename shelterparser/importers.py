@@ -93,16 +93,6 @@ class ShelterImporter(object):
         return "Importer with URL '%s'." % self.url
 
 
-def get_shelters():
-    shelters = {}
-    for shelter in SHELTERS:
-        shelters[shelter['shelter_id']] = {
-            "name": shelter['shelter_name'],
-            "url": shelter['shelter_url'],
-        }
-    return shelters
-
-
 class AnimalImporter(object):
 
     def __init__(self, from_date=None, throw_exceptions=False):
@@ -130,6 +120,16 @@ class AnimalImporter(object):
                         print traceback.format_exc()
                         if self.throw_exceptions:
                             raise
+
+    @staticmethod
+    def get_shelters():
+        shelters = {}
+        for shelter in SHELTERS:
+            shelters[shelter['shelter_id']] = {
+                "name": shelter['shelter_name'],
+                "url": shelter['shelter_url'],
+            }
+        return shelters
 
 
 def main():
