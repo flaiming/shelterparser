@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--[if IE 6]>
+<html id="ie6" lang="cs-CZ">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" lang="cs-CZ">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" lang="cs-CZ">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html lang="cs-CZ">
+<!--<![endif]-->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    
+    <title>Vítejte na stránkách Nadace Tlapka</title>
+    
+    <link rel="profile" href="http://gmpg.org/xfn/11" />
+    <link rel="stylesheet" type="text/css" media="all" href="http://nadace-tlapka.cz/wp-content/themes/tlapka/style.css" />
+    <link rel="pingback" href="http://nadace-tlapka.cz/xmlrpc.php" />
+    
+    <!--[if lt IE 9]>
+    <script src="http://nadace-tlapka.cz/wp-content/themes/tlapka/js/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    
+    <div id="fb-root"></div>
+    
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/cs_CZ/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <script src='http://connect.facebook.net/en_US/all.js'></script>
+
+    <script> 
+      FB.init({appId: "153439921464270", status: true, cookie: true});
+
+      function postToFeed() {
+
+        // calling the API ...
+        var obj = {
+          method: 'feed',
+          link: 'http://nadace-tlapka.cz',
+          picture: 'http://nadace-tlapka.cz/wp-content/themes/tlapka/images/logo.png',
+          name: 'Nadace TLAPKA',
+          caption: 'Útulek Žim',
+          description: 'Nadace TLAPKA je organizací, jejíž posláním je zajištění ochrany a péče o opuštěná, týraná a nalezená zvířata. Budeme rádi za jakoukoliv Vaší pomoc. Děkujeme.'
+        };
+
+        function callback(response) {
+          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+        }
+
+        FB.ui(obj);
+      }
+    
+    </script>
+    <script src="http://nadace-tlapka.cz/wp-content/themes/tlapka/js/jquery-1.7.2.min.js"></script>
+    <script src="http://nadace-tlapka.cz/wp-content/themes/tlapka/js/lightbox.js"></script>
+    <link href="http://nadace-tlapka.cz/wp-content/themes/tlapka/lightbox.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="contact">
+    <a href="http://nadace-tlapka.cz/kontakty"><span class="title">KONTAKT</span></a>
+    <span>Útulek Nadace TLAPKA, Žim 59, 415 01, Žim   -   Telefon: +420 606 221 405 & e-mail: <a href="mailto: utulek@nadace-tlapka.cz" rel="email">utulek@nadace-tlapka.cz</a><br />Před návštěvou útulku nám pro ověření naší přítomnosti zavolejte! Děkujeme.</span>
+  </div>
+  <div id="pageBox"> 
+      <div id="ad">
+                <a href="http://www.spokojenychovatel.cz/"><img src="http://nadace-tlapka.cz/wp-content/uploads//856580_651773468188996_919080182_o1.jpg" alt="http://www.spokojenychovatel.cz/" width="450" height="60" class="adimg"/></a>
+      
+      <a href="#" onclick='postToFeed(); return false;' ><img src="http://nadace-tlapka.cz/wp-content/themes/tlapka/images/fb.png" alt="facebook" class="fb-ref"/></a></div>
+      <div id="header">
+        <a href="http://nadace-tlapka.cz"><img src="http://nadace-tlapka.cz/wp-content/themes/tlapka/images/logo.png" alt="logo" /></a>
+        <h1>Vítejte na stránkách <br /> Nadace Tlapka</h1>
+        <div id="nabidka">
+                        
+          <img src="http://www.nadace-tlapka.cz/wp-content/uploads/1347051653-005-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0245-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0395-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//110-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//140-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//1017098_590727017626975_601987258_n-70x70.jpg" alt="" />
+
+                         
+          <img src="http://www.nadace-tlapka.cz/wp-content/uploads/1337026765-100_4627-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0652-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0149-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0203-70x70.jpg" alt="" />
+
+                   <a href="http://nadace-tlapka.cz/nabidka-zvirat" id="nabidkaOdkaz" ><span>Odkaz</span></a>
+        </div>
+      </div>
+      <div id="page">
+        <div id="menu">
+          
+            <div class="menu-mainmenu-container"><ul id="menu-mainmenu" class="menu"><li id="menu-item-85" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-85"><a href="http://nadace-tlapka.cz/o-nadaci-tlapka/">O Nadaci Tlapka</a>
+<ul class="sub-menu">
+	<li id="menu-item-83" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-83"><a href="http://nadace-tlapka.cz/jak-nam-pomoci/">Jak nám pomoci</a></li>
+	<li id="menu-item-86" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-86"><a href="http://nadace-tlapka.cz/o-nadaci-tlapka/petice/">Petice</a></li>
+</ul>
+</li>
+<li id="menu-item-80" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-31 current_page_item menu-item-80"><a href="http://nadace-tlapka.cz/nabidka-zvirat/">Nabídka zvířat</a>
+<ul class="sub-menu">
+	<li id="menu-item-81" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81"><a href="http://nadace-tlapka.cz/nabidka-zvirat/podminky-adopce/">Podmínky adopce</a></li>
+	<li id="menu-item-79" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-79"><a href="http://nadace-tlapka.cz/utulky-cr/">Útulky ČR</a></li>
+</ul>
+</li>
+<li id="menu-item-82" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-82"><a href="http://nadace-tlapka.cz/sponzori/">Sponzoři</a></li>
+<li id="menu-item-88" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-88"><a href="http://nadace-tlapka.cz/o-nadaci-tlapka/kontakty/">Kontakty</a></li>
+</ul></div>          
+        </div>
+
+				
+					<div id="content">
+    
+    
+        
+      <div id="leftColumn" style="width: 96%; margin: 20px 2%;margin-top: 0; ">
+      
+      
+		<script> 
+      			function postToFeedAn() {
+
+        			var obj = {
+          				method: 'feed',
+          				link: 'http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=550',
+          				picture: 'http://nadace-tlapka.cz/wp-content/uploads//0332-140x140.jpg',
+          				name: 'Locika',
+          				caption: 'Pes / fena',
+          				description: 'Fenu nám dovezla MP Duchcov. Nalezena byla v obci Hrob. Na sobě má kšíry a obojek proti blechám.'
+        			};
+
+        			function callback(response) {
+          				document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+        			}
+
+        			FB.ui(obj);
+      			}
+    
+    		</script>
+
+	<h2>Locika<a href="#" onclick="postToFeedAn(); return false;" style="float:right;">Sdílej mě na facebooku!</a></h2><div style="float:left; width: 100%; background: rgb(255,193,194);"><div class="images" style="float:left; margin: 10px; width: 140px;"><a href="http://nadace-tlapka.cz/wp-content/uploads//0332.jpg" rel="lightbox"><img src="http://nadace-tlapka.cz/wp-content/uploads//0332-140x140.jpg" alt="Locika"></a></div><div class="info" style="float:left; margin: 15px; margin-top: 10px;"><table border="0">
+                <tbody>
+                <tr>
+                <td style="width: 150px"><b>Evidenční číslo:</b></td>
+                <td><b>140013</b></td>
+                </tr>
+                <tr>
+                <td>Místo nalezení:</td>
+                <td>Hrob</td>
+                </tr>
+                <tr>
+                <td>Umístění:</td>
+                <td>útulek - Nadace Tlapka</td>
+                </tr>
+                <tr>
+                <td>Datum nálezu:</td>
+                <td>18. 01. 2014</td>
+                </tr>
+                <tr>
+                <td>Kastrace:</td>
+                <td>Ne</td>
+                </tr>
+                <tr>
+                <td>Druh:</td>
+                <td>Pes / fena</td>
+                </tr>
+                <tr>
+                <td>Pohlaví:</td>
+                <td>Samice</td>
+                </tr>
+                <tr>
+                <td>Velikost:</td>
+                <td>Malý</td>
+                </tr>
+                <tr>
+                <td>Stáří:</td>
+                <td>6 let</td>
+                </tr>
+                </tbody>
+              </table></div><div class="text_info" style="display: inline-block; width: auto; background: rgba(255, 255, 255, 0.8); line-height: 1.5; margin: 18px; padding: 5px;"><p>Fenu nám dovezla MP Duchcov. Nalezena byla v obci Hrob. Na sobě má kšíry a obojek proti blechám.</p></div></div>    
+             
+</div>
+					
+				
+
+
+        <div id="footer">
+          <img src="http://nadace-tlapka.cz/wp-content/themes/tlapka/images/footer.jpg" alt="logo" />
+          <span>
+            <b>NADACE TLAPKA</b><br />
+            www.nadace-tlapka.cz<br />
+            info@nadace-tlapka.cz<br />
+            Na Lučinách 541<br />
+            417 12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Proboštov<br />
+            IČO: 27352200<br />
+            DIČ: CZ27352200<br />
+          </span>
+          <span class="author">Jan Prášil, Copyright 2014</span>
+        </div>
+      </div>
+    </div> 
+  </body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<!--[if IE 6]>
+<html id="ie6" lang="cs-CZ">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" lang="cs-CZ">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" lang="cs-CZ">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html lang="cs-CZ">
+<!--<![endif]-->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    
+    <title>Vítejte na stránkách Nadace Tlapka</title>
+    
+    <link rel="profile" href="http://gmpg.org/xfn/11" />
+    <link rel="stylesheet" type="text/css" media="all" href="http://nadace-tlapka.cz/wp-content/themes/tlapka/style.css" />
+    <link rel="pingback" href="http://nadace-tlapka.cz/xmlrpc.php" />
+    
+    <!--[if lt IE 9]>
+    <script src="http://nadace-tlapka.cz/wp-content/themes/tlapka/js/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    
+    <div id="fb-root"></div>
+    
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/cs_CZ/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <script src='http://connect.facebook.net/en_US/all.js'></script>
+
+    <script> 
+      FB.init({appId: "153439921464270", status: true, cookie: true});
+
+      function postToFeed() {
+
+        // calling the API ...
+        var obj = {
+          method: 'feed',
+          link: 'http://nadace-tlapka.cz',
+          picture: 'http://nadace-tlapka.cz/wp-content/themes/tlapka/images/logo.png',
+          name: 'Nadace TLAPKA',
+          caption: 'Útulek Žim',
+          description: 'Nadace TLAPKA je organizací, jejíž posláním je zajištění ochrany a péče o opuštěná, týraná a nalezená zvířata. Budeme rádi za jakoukoliv Vaší pomoc. Děkujeme.'
+        };
+
+        function callback(response) {
+          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+        }
+
+        FB.ui(obj);
+      }
+    
+    </script>
+    <script src="http://nadace-tlapka.cz/wp-content/themes/tlapka/js/jquery-1.7.2.min.js"></script>
+    <script src="http://nadace-tlapka.cz/wp-content/themes/tlapka/js/lightbox.js"></script>
+    <link href="http://nadace-tlapka.cz/wp-content/themes/tlapka/lightbox.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="contact">
+    <a href="http://nadace-tlapka.cz/kontakty"><span class="title">KONTAKT</span></a>
+    <span>Útulek Nadace TLAPKA, Žim 59, 415 01, Žim   -   Telefon: +420 606 221 405 & e-mail: <a href="mailto: utulek@nadace-tlapka.cz" rel="email">utulek@nadace-tlapka.cz</a><br />Před návštěvou útulku nám pro ověření naší přítomnosti zavolejte! Děkujeme.</span>
+  </div>
+  <div id="pageBox"> 
+      <div id="ad">
+                <a href="http://strechyhorak.eu"><img src="http://nadace-tlapka.cz/wp-content/uploads/1332687132-bannerbig[1].jpg" alt="Střechy Horák" width="450" height="60" class="adimg"/></a>
+      
+      <a href="#" onclick='postToFeed(); return false;' ><img src="http://nadace-tlapka.cz/wp-content/themes/tlapka/images/fb.png" alt="facebook" class="fb-ref"/></a></div>
+      <div id="header">
+        <a href="http://nadace-tlapka.cz"><img src="http://nadace-tlapka.cz/wp-content/themes/tlapka/images/logo.png" alt="logo" /></a>
+        <h1>Vítejte na stránkách <br /> Nadace Tlapka</h1>
+        <div id="nabidka">
+                        
+          <img src="http://www.nadace-tlapka.cz/wp-content/uploads/1347051653-005-70x70.jpg" alt="" />
+
+                         
+          <img src="http://www.nadace-tlapka.cz/wp-content/uploads/1345122973-dscn9446-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0149-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0187-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0583-70x70.jpg" alt="" />
+
+                         
+          <img src="http://www.nadace-tlapka.cz/wp-content/uploads/1337089734-dscn7066-70x70.jpg" alt="" />
+
+                         
+          <img src="http://www.nadace-tlapka.cz/wp-content/uploads/1345236095-dscn9665-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//110-70x70.jpg" alt="" />
+
+                         
+          <img src="http://www.nadace-tlapka.cz/wp-content/uploads/1349106257-042-70x70.jpg" alt="" />
+
+                         
+          <img src="http://nadace-tlapka.cz/wp-content/uploads//0671-70x70.jpg" alt="" />
+
+                   <a href="http://nadace-tlapka.cz/nabidka-zvirat" id="nabidkaOdkaz" ><span>Odkaz</span></a>
+        </div>
+      </div>
+      <div id="page">
+        <div id="menu">
+          
+            <div class="menu-mainmenu-container"><ul id="menu-mainmenu" class="menu"><li id="menu-item-85" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-85"><a href="http://nadace-tlapka.cz/o-nadaci-tlapka/">O Nadaci Tlapka</a>
+<ul class="sub-menu">
+	<li id="menu-item-83" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-83"><a href="http://nadace-tlapka.cz/jak-nam-pomoci/">Jak nám pomoci</a></li>
+	<li id="menu-item-86" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-86"><a href="http://nadace-tlapka.cz/o-nadaci-tlapka/petice/">Petice</a></li>
+</ul>
+</li>
+<li id="menu-item-80" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-31 current_page_item menu-item-80"><a href="http://nadace-tlapka.cz/nabidka-zvirat/">Nabídka zvířat</a>
+<ul class="sub-menu">
+	<li id="menu-item-81" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81"><a href="http://nadace-tlapka.cz/nabidka-zvirat/podminky-adopce/">Podmínky adopce</a></li>
+	<li id="menu-item-79" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-79"><a href="http://nadace-tlapka.cz/utulky-cr/">Útulky ČR</a></li>
+</ul>
+</li>
+<li id="menu-item-82" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-82"><a href="http://nadace-tlapka.cz/sponzori/">Sponzoři</a></li>
+<li id="menu-item-88" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-88"><a href="http://nadace-tlapka.cz/o-nadaci-tlapka/kontakty/">Kontakty</a></li>
+</ul></div>          
+        </div>
+
+				
+					<div id="content">
+    
+    
+        
+    
+    
+      <div id="leftColumn" style="width: 96%; margin: 20px 2%; margin-top: 0;">    
+        <h2>Nabídka zvířat</h2>
+                
+        <form action="" method="get">
+          <table style="width:100%; float:left;" cellpadding="3">
+          <tr>
+            <td style="width: 220px; background: #CCCCCC;" align="center"><select name="druh"><option value="">Druh zvířete</option><option  value="p">Pes</option><option  value="k">Kočka</option></select></td>
+            <td style="width: 220px; background: #CCCCCC;" align="center"><select name="pohlavi"><option value="">Pohlaví</option><option  value="m">Samec</option><option  value="z">Samice</option></select></td>
+            <td style="width: 220px; background: #CCCCCC;" align="center"><select name="kastrovano"><option value="">Kastrováno</option><option  value="a">Ano</option><option  value="n">Ne</option></select></td>
+            </tr>
+            <tr><td colspan="3" style="width:100%; background: #DDDDDD;" align="center"><input type="submit" name="seradit" value="Seřadit"></td></tr>
+          </table>
+        </form>
+         
+                          
+        <div class="zvireBox" style="background: rgb(255,193,194);">
+          <h3 style="color: white; background: rgb(234,87,90);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=555">Saša</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=555"><img src="http://nadace-tlapka.cz/wp-content/uploads//0671-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 140018</b><br />
+              Místo nálezu: Dubí <br />
+              Datum nálezu: 27. 02. 2014<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samice <br />
+              Kastrace: Ne <br />
+              Velikost: Malý            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=552">Mário</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=552"><img src="http://nadace-tlapka.cz/wp-content/uploads//P2020242-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 140015</b><br />
+              Místo nálezu: Krupka <br />
+              Datum nálezu: 03. 02. 2014<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Střední            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(255,193,194);">
+          <h3 style="color: white; background: rgb(234,87,90);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=550">Locika</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=550"><img src="http://nadace-tlapka.cz/wp-content/uploads//0332-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 140013</b><br />
+              Místo nálezu: Hrob <br />
+              Datum nálezu: 18. 01. 2014<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samice <br />
+              Kastrace: Ne <br />
+              Velikost: Malý            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(255,193,194);">
+          <h3 style="color: white; background: rgb(234,87,90);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=548">Bára</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=548"><img src="http://nadace-tlapka.cz/wp-content/uploads//163-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 140011</b><br />
+              Místo nálezu: Teplice <br />
+              Datum nálezu: 12. 01. 2014<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samice <br />
+              Kastrace: Ne <br />
+              Velikost: Velký            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=546">Halder</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=546"><img src="http://nadace-tlapka.cz/wp-content/uploads//00216-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 140009</b><br />
+              Místo nálezu: Kozlíky <br />
+              Datum nálezu: 11. 01. 2014<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Malý            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=521">Bazik</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=521"><img src="http://nadace-tlapka.cz/wp-content/uploads//140-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 140001</b><br />
+              Místo nálezu: Duchcov <br />
+              Datum nálezu: 05. 01. 2014<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Velký            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(255,193,194);">
+          <h3 style="color: white; background: rgb(234,87,90);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=544">Diana</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=544"><img src="http://nadace-tlapka.cz/wp-content/uploads//0079-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110595</b><br />
+              Místo nálezu: Duchcov <br />
+              Datum nálezu: 28. 12. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samice <br />
+              Kastrace: Ne <br />
+              Velikost: Velký            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=515">Kladrubáček</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=515"><img src="http://nadace-tlapka.cz/wp-content/uploads//0841-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110583</b><br />
+              Místo nálezu: I13 u Kladrub <br />
+              Datum nálezu: 14. 12. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Střední            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(255,193,194);">
+          <h3 style="color: white; background: rgb(234,87,90);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=510">Beky</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=510"><img src="http://nadace-tlapka.cz/wp-content/uploads//0961-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110853</b><br />
+              Místo nálezu: Most <br />
+              Datum nálezu: 11. 12. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samice <br />
+              Kastrace: Ne <br />
+              Velikost: Střední            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=512">Sid</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=512"><img src="http://nadace-tlapka.cz/wp-content/uploads//085-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110855</b><br />
+              Místo nálezu: Chomutov <br />
+              Datum nálezu: 02. 12. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Velký            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=508">Kája 2 </a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=508"><img src="http://nadace-tlapka.cz/wp-content/uploads//084-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110581</b><br />
+              Místo nálezu: Duchcov <br />
+              Datum nálezu: 01. 12. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Střední            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=539">Brian</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=539"><img src="http://nadace-tlapka.cz/wp-content/uploads//0188-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110590</b><br />
+              Místo nálezu: Teplice <br />
+              Datum nálezu: 30. 11. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Velký            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=505">Míša</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=505"><img src="http://nadace-tlapka.cz/wp-content/uploads//0481-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110578</b><br />
+              Místo nálezu: Košťany <br />
+              Datum nálezu: 27. 11. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ano <br />
+              Velikost: Malý            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=542">Jojo</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=542"><img src="http://nadace-tlapka.cz/wp-content/uploads//PB140272-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110593</b><br />
+              Místo nálezu: Krupka <br />
+              Datum nálezu: 20. 11. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Střední            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=537">Strašidlo</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=537"><img src="http://nadace-tlapka.cz/wp-content/uploads//0245-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110580</b><br />
+              Místo nálezu: Krupka <br />
+              Datum nálezu: 13. 11. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Malý            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(255,193,194);">
+          <h3 style="color: white; background: rgb(234,87,90);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=541">Žaky</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=541"><img src="http://nadace-tlapka.cz/wp-content/uploads//0361-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110592</b><br />
+              Místo nálezu: Žim <br />
+              Datum nálezu: 01. 11. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samice <br />
+              Kastrace: Ano <br />
+              Velikost: Střední            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=540">Kazan</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=540"><img src="http://nadace-tlapka.cz/wp-content/uploads//0395-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110591</b><br />
+              Místo nálezu: Duchcov <br />
+              Datum nálezu: 28. 10. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Velký            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=538">Horálek</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=538"><img src="http://nadace-tlapka.cz/wp-content/uploads//0311-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110589</b><br />
+              Místo nálezu: Krupka <br />
+              Datum nálezu: 03. 10. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ne <br />
+              Velikost: Střední            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(199,201,250);">
+          <h3 style="color: white; background: rgb(30,164,202);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=500">Krisík</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=500"><img src="http://nadace-tlapka.cz/wp-content/uploads//0411-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110562</b><br />
+              Místo nálezu: Dubí <br />
+              Datum nálezu: 30. 09. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samec <br />
+              Kastrace: Ano <br />
+              Velikost: Malý            </p>
+          </div>
+        </div>
+    
+                          
+        <div class="zvireBox" style="background: rgb(255,193,194);">
+          <h3 style="color: white; background: rgb(234,87,90);"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=491">Tazy</a></h3>
+          <div class="img"><a href="http://nadace-tlapka.cz/nabidka-zvirat/?nabidkaID=491"><img src="http://nadace-tlapka.cz/wp-content/uploads//0203-140x140.jpg" alt="" width="140" height="140" /></a></div>          <div class="info">
+            <p>
+              <b>Evidenční číslo: 110555</b><br />
+              Místo nálezu: Duchcov <br />
+              Datum nálezu: 29. 09. 2013<br />
+              Druh: Pes / fena<br />
+              Pohlaví: Samice <br />
+              Kastrace: Ne <br />
+              Velikost: Malý            </p>
+          </div>
+        </div>
+    
+        <p style="text-align: right; width: 98%; margin-right: 2%; float:left; color: black; font-size: 16px; margin-top: 20px;">Stránkování: <a href="http://nadace-tlapka.cz/nabidka-zvirat?pstr=1" style="text-decoration: underline; color: black;" >1</a> | <a href="http://nadace-tlapka.cz/nabidka-zvirat?pstr=2" style=" color: black;" >2</a> | <a href="http://nadace-tlapka.cz/nabidka-zvirat?pstr=3" style=" color: black;" >3</a></p>        
+      </div>
+             
+</div>
+					
+				
+
+
+        <div id="footer">
+          <img src="http://nadace-tlapka.cz/wp-content/themes/tlapka/images/footer.jpg" alt="logo" />
+          <span>
+            <b>NADACE TLAPKA</b><br />
+            www.nadace-tlapka.cz<br />
+            info@nadace-tlapka.cz<br />
+            Na Lučinách 541<br />
+            417 12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Proboštov<br />
+            IČO: 27352200<br />
+            DIČ: CZ27352200<br />
+          </span>
+          <span class="author">Jan Prášil, Copyright 2014</span>
+        </div>
+      </div>
+    </div> 
+  </body>
+</html>
