@@ -2,7 +2,11 @@
 
 Parser for Czech animal shelters.
 
-Currently used at [NajdiMazla.cz](http://najdimazla.cz).
+Currently parsing animals from shelters:
+- http://nadace-tlapka.cz/
+- http://www.mpb.cz/
+
+This parser is used at [NajdiMazla.cz](http://najdimazla.cz).
 
 ## Installation
 
