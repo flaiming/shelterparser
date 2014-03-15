@@ -47,7 +47,9 @@ class ShelterImporter(object):
             print "Detail url: %s" % (detail_url,)
             animal = self._get_animal(detail_url)
 
-            if from_date and isinstance(from_date, datetime.datetime) and animal['date_created'] < from_date:
+            if from_date is not None and not isinstance(from_date, datetime.date):
+                raise Exception("Parameter from_date is not instance of datetime.date!")
+            if from_date is not None and animal['date_created'].date() < from_date:
                 return
             else:
                 yield animal

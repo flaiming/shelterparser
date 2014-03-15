@@ -17,7 +17,7 @@ $ ./setup.py install
 #!/usr/bin/env python
 from shelterparser.importers import AnimalImporter
 
-# import animals from this day and won't throw any exceptions
+# import all animals and don't throw any exceptions
 importer = AnimalImporter()
 
 # in case of problem at importing, animal is skipped
@@ -30,6 +30,7 @@ for animal in importer.iter_animals():
 
 ```python
 #!/usr/bin/env python
+import datetime
 from shelterparser.importers import AnimalImporter
 
 # import animals from given date and throw exceptions

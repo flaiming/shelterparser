@@ -30,7 +30,7 @@ class AnimalModel():
     }
 
     def set(self, field, value):
-        print "Setting %s to %s of type %s" % (field, value, type(value))
+        # print "Setting %s to %s of type %s" % (field, value, type(value))
         if field not in self.fields.keys():
             raise AttributeError("Animal do not have field '%s'!" % field)
         if isinstance(value, NoneType):

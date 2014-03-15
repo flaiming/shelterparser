@@ -24,7 +24,6 @@ class Opener(object):
         if self.path.startswith('http'):
             response = urllib2.urlopen(self.path)
             self.content_type = response.info().gettype()
-            print "Content type of '%s': '%s'" % (self.path, self.content_type)
             data = response.read()
             try:
                 response.close()
@@ -41,7 +40,6 @@ class Opener(object):
             if hasattr(soup, 'original_encoding') and soup.original_encoding:
                 self.encoding = soup.original_encoding
         if self.encoding:
-            print "Decoding data from '%s' to unicode." % self.encoding
             data = data.decode(self.encoding, 'replace')
         return data
 
