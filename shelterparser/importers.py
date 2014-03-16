@@ -33,6 +33,19 @@ SHELTERS = [
         "urls": {
             "http://nadace-tlapka.cz/nabidka-zvirat/": AnimalState.ADOPTION,
         }
+    },
+    {
+        "shelter_id": 3,
+        "shelter_name": u"Centrum pro zvířata v nouzi při ZOO Liberec",
+        "shelter_url": "http://www.zooliberec.cz/archa/",
+        "data_type": DataType.HTML,
+        "urls": {
+            "http://www.zooliberec.cz/archa/cz/utulek/psi/mali-psi": AnimalState.ADOPTION,
+            "http://www.zooliberec.cz/archa/cz/utulek/psi/velci-psi": AnimalState.ADOPTION,
+            "http://www.zooliberec.cz/archa/cz/utulek/psi/male-feny": AnimalState.ADOPTION,
+            "http://www.zooliberec.cz/archa/cz/utulek/psi/velke-feny": AnimalState.ADOPTION,
+            "http://www.zooliberec.cz/archa/cz/utulek/kocky/utulkova-nabidka": AnimalState.ADOPTION,
+        }
     }
 ]
 

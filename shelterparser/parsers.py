@@ -4,6 +4,7 @@ from itertools import cycle, islice
 from bs4 import BeautifulSoup
 import datetime
 import feedparser
+import difflib
 
 from enums import CategoryType, resolve_gender_and_category
 from models import AnimalModel
@@ -72,21 +73,28 @@ class GenericParser(object):
         return None
 
     def _find_nearest_elems(self, elem, tag, id_name="", class_name="", depth=4):
-        result = self._find_nearest_descendant_elems(elem, tag, id_name, class_name)
+        result = self.__find_nearest_descendant_elems(elem, tag, id_name, class_name)
+        result = self.__filter_elements_without_text(result)
         if result:
             return result
         # search in siblings
         for e in roundrobin(elem.previous_siblings, elem.next_siblings):
-            res = self._find_nearest_descendant_elems(e, tag, id_name=id_name, class_name=class_name)
-            #print "Result: %s" % repr(res)
+            res = self.__find_nearest_descendant_elems(e, tag, id_name=id_name, class_name=class_name)
+            res = self.__filter_elements_without_text(res)
+            # print "Result: %s" % repr(res)
             if res:
                 return res
-        #print "Nenalezeno v sourozencich, jdu na rodice (depth=%d)" % depth
+        # print "Nenalezeno v sourozencich, jdu na rodice (depth=%d)" % depth
         if depth > 0:
             return self._find_nearest_elems(elem.parent, tag, id_name=id_name, class_name=class_name, depth=depth - 1)
         return []
 
-    def _find_nearest_descendant_elems(self, elem, tag, id_name="", class_name=""):
+    def __filter_elements_without_text(self, elements):
+        if elements:
+            return [res for res in elements if res.get_text().strip() == ""]
+        return []
+
+    def __find_nearest_descendant_elems(self, elem, tag, id_name="", class_name=""):
         if not hasattr(elem, 'name'):
             # element is probably string
             return []
@@ -140,12 +148,23 @@ class GenericParser(object):
                     parent_stats[parent] = [elements[index]]
 
         best_children = []
-        for parent, children in parent_stats.items():
-            if len(children) > element_count * 0.6:
+        # parents with most children first
+        for k in sorted(parent_stats, key=lambda k: len(parent_stats[k]), reverse=True):
+            children = parent_stats[k]
+            children_ok = True
+            for i in range(1, len(children)):
+                if self._get_string_difference(children[i - 1]['href'], children[i]['href']) < 0.93:
+                    children_ok = False
+                    break
+            if children_ok:
                 best_children = children
                 break
         # print "Best children: %s" % best_children
         return best_children
+
+    def _get_string_difference(self, a, b):
+        difference = difflib.SequenceMatcher(None, a, b).ratio()
+        return difference
 
 
 class HtmlParser(GenericParser):
@@ -211,6 +230,9 @@ RE_DEVIDER = ur'\s*:\s*(?:<[^>]+>\s*){0,4}\s*'
 
 class DetailParser(GenericParser):
 
+    RE_DATE_CREATED = ur'Datum (?:předání pejska do útulku|předání do útulku|přijetí do útulku|a čas odchytu|nálezu)'
+    RE_AGE = ur'(?:Stáří|Věk)'
+
     def __init__(self, html, url):
         super(DetailParser, self).__init__(html, url)
         self.fields = [
@@ -240,14 +262,16 @@ class DetailParser(GenericParser):
         return animal
 
     def get_name(self):
-        name = ""
-        h1 = self.soup.find('h1')
-        if h1:
-            name = h1.text
-        if not name or len(name.split(' ')) > 2:
-            h2 = self.soup.find('h2')
-            if h2:
-                name = h2.find(text=True, recursive=False)
+        name = u""
+        common_parent = self._get_common_parent()
+        if common_parent:
+            # recursively search common parent for h1,h2,h3,h4 elements
+            for i in range(4):
+                common_parent = common_parent.parent
+                heading = common_parent.find(re.compile("^h(?:1|2|3|4)$"))
+                if heading:
+                    name = unicode(heading.find(text=True, recursive=False))
+                    break
         return name
 
     def get_reg_num(self):
@@ -266,8 +290,7 @@ class DetailParser(GenericParser):
 
     def get_date_created(self):
         if self.accuracy == Accuracy.NORMAL:
-            result = re.findall(
-                ur'Datum (?:přijetí do útulku|a čas odchytu|nálezu)' + RE_DEVIDER + ur'([\d.,: ]+)', self.html, flags=re.I | re.U)
+            result = re.findall(self.RE_DATE_CREATED + RE_DEVIDER + ur'([\d.,: ]+)', self.html, flags=re.I | re.U)
         elif self.accuracy == Accuracy.LOW:
             result = re.findall(ur'\b\d{1,4}(?:-|\.|,)\d{1,4}(?:-|\.|,)\d{1,4}\b', self.html, flags=re.I | re.U)
         if result:
@@ -325,11 +348,12 @@ class DetailParser(GenericParser):
             # we don't know from when to compute birth date
             return None
 
-        result = re.findall(ur'(?:Stáří|Věk)' + RE_DEVIDER + ur'([\w\d., -]+)', self.html, flags=re.I | re.U)
+        result = re.findall(self.RE_AGE + RE_DEVIDER + ur'([\w\d., -]+)', self.html, flags=re.I | re.U)
         age = None
         birth_date = None
         if result:
             raw_age = result[0].strip()
+            raw_age = re.sub(ur'^[a-z]+\s*', '', raw_age, flags=re.I | re.U)
             # nejdrive zkusime najit interval
             if re.search(ur'\d+-\d+', raw_age, flags=re.I | re.U):
                 result = re.findall(ur'\d+-\d+', raw_age, flags=re.I | re.U)
@@ -353,8 +377,13 @@ class DetailParser(GenericParser):
                     bd = datetime.date(int(age), 1, 1)
                 else:
                     # relative age
-                    days_per_year = 365.24
-                    bd = date_created.date() - datetime.timedelta(days=int(days_per_year * age))
+                    if u"měsíc" in raw_age and not u"rok" in raw_age:
+                        # months only
+                        bd = date_created.date() - datetime.timedelta(days=int(age) * 30)
+                    else:
+                        # year
+                        days_per_year = 365.24
+                        bd = date_created.date() - datetime.timedelta(days=int(days_per_year * age))
                 birth_date = bd
         return birth_date
 
@@ -409,12 +438,9 @@ class DetailParser(GenericParser):
         return castrated
 
     def get_photos(self):
-        common_parent = self._common_parent(
-            self.soup.find(text=re.compile(ur'(?:Stáří|Věk):', re.U | re.I)),
-            self.soup.find(text=re.compile(ur'Místo\s+(?:odchytu|nalezení)', re.U | re.I))
-        )
+        common_parent = self._get_common_parent()
         if common_parent:
-            results = self._find_nearest_elems(common_parent, 'a')
+            results = self._find_nearest_elems(common_parent, 'a', depth=5)
             photos = []
             for a in results:
                 if re.match(ur'.+\.(?:jpg|jpeg|gif|png).*', a['href'], flags=re.I | re.U):
@@ -431,6 +457,12 @@ class DetailParser(GenericParser):
                         photos.append(utils.unite_url(self.base_url, a['href'].replace('\\', '/')))
             return photos
         return []
+
+    def _get_common_parent(self):
+        return self._common_parent(
+            self.soup.find(text=re.compile(self.RE_AGE, re.U | re.I)),
+            self.soup.find(text=re.compile(self.RE_DATE_CREATED, re.U | re.I))
+        )
 
 
 def roundrobin(*iterables):

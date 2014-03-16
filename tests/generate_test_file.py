@@ -28,6 +28,11 @@ class ShelterImporterTestGenerator(ShelterImporter):
             # create __init__.py
             open(os.path.join(folder, "__init__.py"), 'a').close()
 
+    def _iter_detail_urls(self):
+        for url in super(ShelterImporterTestGenerator, self)._iter_detail_urls():
+            print "URL: %s" % url
+            yield url
+
     def _get_data_from_url(self, url):
         data = super(ShelterImporterTestGenerator, self)._get_data_from_url(url)
 
