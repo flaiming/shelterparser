@@ -54,7 +54,7 @@ ANIMALS = {'http://www.mpb.cz/psi-k-adopci/?tx_odmpbrno%5Buid%5D=3892': {'birth_
                                                                'street': u'ul. U Anton\xed\u010dka',
                                                                'url': 'http://www.mpb.cz/psi-k-adopci/?tx_odmpbrno%5Buid%5D=3899',
                                                                'weight': 16},
- 'http://www.mpb.cz/psi-k-adopci/?tx_odmpbrno%5Buid%5D=3901': {'birth_date': datetime.date(2009, 8, 30),
+ 'http://www.mpb.cz/psi-k-adopci/?tx_odmpbrno%5Buid%5D=3901': {'birth_date': datetime.date(2013, 10, 31),
                                                                'category': u'dog',
                                                                'chip_num': '',
                                                                'colour': u'\u010dern\xe1, b\xedl\xe9 znaky',
