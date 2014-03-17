@@ -27,7 +27,8 @@ def main():
 
         opener = Opener(path)
         detail = DetailParser(opener.read(), 'http://www.fakeurl.com')
-        pprint.pprint(detail.get_animal().get_dict())
+        animal = detail.get_animal()
+        pprint.pprint(animal.get_dict())
 
     except IOError as e:
         print "Cannot open path %s: %s" % (path, e.strerror)

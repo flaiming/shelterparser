@@ -26,7 +26,8 @@ class AnimalModel():
         'dewormed': bool,
         'chipped': bool,
         'handicapped': bool,
-        'photos': list
+        'photos': list,
+        'url': basestring,
     }
 
     def set(self, field, value):

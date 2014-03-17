@@ -46,7 +46,7 @@ class ShelterImporterTestGenerator(ShelterImporter):
     def _get_animal(self, url):
         animal = super(ShelterImporterTestGenerator, self)._get_animal(url)
         print "Creating test files for animal..."
-        self.animals[url] = animal
+        self.animals[url] = animal.get_dict()
         return animal
 
     def __create_file_path(self, base_name):

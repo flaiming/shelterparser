@@ -62,16 +62,17 @@ class ShelterImporter(object):
 
             if from_date is not None and not isinstance(from_date, datetime.date):
                 raise Exception("Parameter from_date is not instance of datetime.date!")
-            if from_date is not None and animal['date_created'].date() < from_date:
+            elif from_date is not None and animal.get('date_created').date() < from_date:
+                print "Animal has been already imported (created %s)" % animal.get('date_created')
                 return
             else:
-                yield animal
+                yield animal.get_dict()
 
     def _get_animal(self, url):
         html = self._get_data_from_url(url)
         detail = DetailParser(html, url)
-        animal = detail.get_animal().get_dict()
-        animal['url'] = url
+        animal = detail.get_animal()
+        animal.set('url', url)
         return animal
 
     def _iter_detail_urls(self):

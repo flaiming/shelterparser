@@ -225,7 +225,7 @@ class RssParser(GenericParser):
         return [self.url]
 
 
-RE_DEVIDER = ur'\s*:\s*(?:<[^>]+>\s*){0,4}\s*'
+RE_DEVIDER = ur'\s*:?\s*(?:<[^>]+>\s*){0,4}\s*:?\s*'
 
 
 class DetailParser(GenericParser):
@@ -259,6 +259,9 @@ class DetailParser(GenericParser):
             method = getattr(self, "get_%s" % field)
             result = method()
             animal.set(field, result)
+
+        if not animal.is_satisfactory():
+            raise Exception("!!! Animal doesn't have all obligatory parameters! %s" % animal.get_dict())
         return animal
 
     def get_name(self):

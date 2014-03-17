@@ -61,15 +61,12 @@ class ShelterImporterTester(ShelterImporter):
 
         excluded_keys = ["url"]
 
-        for key, val in animal.items():
+        for key, val in animal.get_dict().items():
 
             if key in excluded_keys:
                 continue
 
             test_name = 'test_animal_%s_%s_%s_%s' % (utils.name_from_url(self.url), utils.name_from_url_rest(self.url), key, self.__get_hash(url))
-            if hasattr(DetailParserTest, test_name):
-                print "detail UZ MA TEST!"
-                exit()
             test_value = self.data.ANIMALS[url][key]
             test = test_generator_equal(test_value, val)
             # print "Adding test '%s'%s: %s" % (test_name, key, test_value)
