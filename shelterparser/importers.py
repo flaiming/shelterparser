@@ -46,7 +46,7 @@ SHELTERS = [
             "http://www.zooliberec.cz/archa/cz/utulek/psi/velke-feny": AnimalState.ADOPTION,
             "http://www.zooliberec.cz/archa/cz/utulek/kocky/utulkova-nabidka": AnimalState.ADOPTION,
         }
-    }
+    },
 ]
 
 
@@ -95,12 +95,11 @@ class ShelterImporter(object):
             if root.name:
                 content_type = root.name.lower()
 
-        if content_type == "html":
-            return HtmlParser(data, url)
-        elif content_type == "rss":
+        if content_type == "rss":
             return RssParser(data, url)
         else:
-            raise Exception("Unknown content type '%s'!" % content_type)
+            # default is HTML
+            return HtmlParser(data, url)
 
     def _get_data_from_url(self, url):
         return Opener(url).read()

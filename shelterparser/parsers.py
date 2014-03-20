@@ -230,8 +230,8 @@ RE_DEVIDER = ur'\s*:?\s*(?:<[^>]+>\s*){0,4}\s*:?\s*'
 
 class DetailParser(GenericParser):
 
-    RE_DATE_CREATED = ur'Datum (?:předání pejska do útulku|předání do útulku|přijetí do útulku|a čas odchytu|nálezu)'
-    RE_AGE = ur'(?:Stáří|Věk)'
+    RE_DATE_CREATED = ur'Datum (?:předání pejska do útulku|předání do útulku|přijetí do útulku|a čas odchytu|nálezu|přijetí|nalezení)'
+    RE_AGE = ur'\b(?:Stáří|Věk)\b'
 
     def __init__(self, html, url):
         super(DetailParser, self).__init__(html, url)
@@ -275,7 +275,7 @@ class DetailParser(GenericParser):
                 if heading:
                     name = unicode(heading.find(text=True, recursive=False))
                     break
-        return name
+        return name.strip()
 
     def get_reg_num(self):
         result = re.findall(ur'Evidenční\s+číslo' + RE_DEVIDER + ur'([\w\d/_ -]+)', self.html, flags=re.I | re.U)

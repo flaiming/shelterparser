@@ -60,7 +60,7 @@ def parse_bool(str_val):
         return True
     elif re.match(ur'ne', str_val, flags=re.I | re.U):
         return False
-    return ""
+    return None
 
 
 def name_from_url(url):
