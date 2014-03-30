@@ -10,7 +10,8 @@ sys.path.append(os.path.abspath('..'))
 
 from shelterparser import utils
 from shelterparser.importers import ShelterImporter
-from tests import TEST_MAX_ANIMALS
+
+GENERATE_MAX_ANIMALS = 5
 
 
 class ShelterImporterTestGenerator(ShelterImporter):
@@ -98,7 +99,7 @@ def main():
             for animal in importer.iter_animals():
                 print "Imported animal: %s" % animal
                 generated_animals += 1
-                if generated_animals >= TEST_MAX_ANIMALS:
+                if generated_animals >= GENERATE_MAX_ANIMALS:
                     break
         except KeyboardInterrupt:
             pass

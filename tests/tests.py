@@ -15,7 +15,9 @@ from shelterparser import utils
 # ID of shelter, when we want to limit tests to only one shelter
 SHELTER_ID = None
 
-TEST_MAX_ANIMALS = 5
+
+class StopShelterTestGeneration(Exception):
+    pass
 
 
 class ShelterImporterTester(ShelterImporter):
@@ -43,8 +45,6 @@ class ShelterImporterTester(ShelterImporter):
             test = test_generator_equal(url, self.data.URL_REWRITES[counter + 1][0])
             setattr(ListParserTest, test_name, test)
             counter += 1
-            if counter >= TEST_MAX_ANIMALS:
-                break
 
         return detail_urls
 
@@ -52,6 +52,8 @@ class ShelterImporterTester(ShelterImporter):
         if url in dict(self.data.URL_REWRITES):
             url = dict(self.data.URL_REWRITES)[url]
             print "Url rewrited to '%s'" % url
+        else:
+            raise StopShelterTestGeneration()
         data = super(ShelterImporterTester, self)._get_data_from_url(url)
         return data
 
@@ -59,15 +61,12 @@ class ShelterImporterTester(ShelterImporter):
         animal = super(ShelterImporterTester, self)._get_animal(url)
         print "Testing animal data..."
 
-        excluded_keys = ["url"]
+        for key, test_value in self.data.ANIMALS[url].items():
 
-        for key, val in animal.get_dict().items():
-
-            if key in excluded_keys:
-                continue
+            animal_data = animal.get_dict()
+            val = animal_data[key] if animal_data.has_key(key) else None
 
             test_name = 'test_animal_%s_%s_%s_%s' % (utils.name_from_url(self.url), utils.name_from_url_rest(self.url), key, self.__get_hash(url))
-            test_value = self.data.ANIMALS[url][key]
             test = test_generator_equal(test_value, val)
             # print "Adding test '%s'%s: %s" % (test_name, key, test_value)
             setattr(DetailParserTest, test_name, test)
@@ -110,14 +109,13 @@ def generate_tests():
                 importer = ShelterImporterTester(import_url, utils.name_from_url(import_url))
                 print importer
 
-                counter = 0
                 for animal in importer.iter_animals():
+                    pass
                     # print "----Animal: %s" % animal
-                    counter += 1
-                    if counter >= TEST_MAX_ANIMALS:
-                        break
             except ImportError:
                 print "====== SKIPPING %s - no test data! ======" % import_url
+            except StopShelterTestGeneration:
+                print "Stopping test generation for %s." % import_url
             except Exception as e:
                 print "Error: %s" % e
                 print traceback.format_exc()

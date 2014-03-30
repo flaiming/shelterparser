@@ -68,7 +68,7 @@ ANIMALS = {'http://www.mpb.cz/nalezeni-psi/?tx_odmpbrno%5Buid%5D=3926': {'birth_
                                                                'street': u'park Lu\u017e\xe1nky',
                                                                'url': 'http://www.mpb.cz/nalezeni-psi/?tx_odmpbrno%5Buid%5D=3935',
                                                                'weight': 24},
- 'http://www.mpb.cz/nalezeni-psi/?tx_odmpbrno%5Buid%5D=3937': {'birth_date': datetime.date(2013, 9, 11),
+ 'http://www.mpb.cz/nalezeni-psi/?tx_odmpbrno%5Buid%5D=3937': {'birth_date': datetime.date(2013, 11, 01),
                                                                'category': u'dog',
                                                                'chip_num': '',
                                                                'colour': u'\u010dern\xe1',

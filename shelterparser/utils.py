@@ -31,7 +31,7 @@ def get_domain_from_url(url):
 
 
 def parse_date(date):
-    raw_parts = date.split(u'.')
+    raw_parts = re.split(u'\.|/', date)
     parts = []
     for i in range(len(raw_parts)):
         try:
@@ -40,9 +40,11 @@ def parse_date(date):
             pass
     if len(parts) == 3:
         if int(parts[0]) > 1990:
-            return datetime.datetime(parts[0], parts[1], parts[2])
+            return datetime.date(parts[0], parts[1], parts[2])
         elif int(parts[2]) > 1990:
-            return datetime.datetime(parts[2], parts[1], parts[0])
+            return datetime.date(parts[2], parts[1], parts[0])
+    elif len(parts) == 2:
+        return datetime.date(parts[1], parts[0], 1)
     return None
 
 

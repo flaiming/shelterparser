@@ -302,9 +302,12 @@ class DetailParser(GenericParser):
             raw = re.sub(ur'\s*(\.)\s*', r'\1', raw)
             parts = raw.split(' ')
             date = utils.parse_date(parts[0])
-            if date and len(parts) > 1:
-                hour, minute = utils.parse_time(parts[1])
-                date = datetime.datetime(date.year, date.month, date.day, hour, minute)
+            if date:
+                if len(parts) > 1:
+                    hour, minute = utils.parse_time(parts[1])
+                    date = datetime.datetime(date.year, date.month, date.day, hour, minute)
+                else:
+                    date = datetime.datetime(date.year, date.month, date.day)
             return date
         return None
 
@@ -351,7 +354,7 @@ class DetailParser(GenericParser):
             # we don't know from when to compute birth date
             return None
 
-        result = re.findall(self.RE_AGE + RE_DEVIDER + ur'([\w\d., -]+)', self.html, flags=re.I | re.U)
+        result = re.findall(self.RE_AGE + RE_DEVIDER + ur'([\w\d.,/ -]+)', self.html, flags=re.I | re.U)
         age = None
         birth_date = None
         if result:
@@ -366,6 +369,8 @@ class DetailParser(GenericParser):
                         age = (int(parts[0]) + int(parts[1])) / 2.0
                     except ValueError:
                         pass
+            elif re.search(ur'\d+(?:(?:\.|/)\d+){1,2}', raw_age):
+                return utils.parse_date(raw_age)
             elif re.search(ur'\d+(?:,|\.)?\d*', raw_age, flags=re.I | re.U):  # zadano primo cislem
                 result = re.findall(ur'\d+(?:,|\.)?\d*', raw_age, flags=re.I | re.U)
                 if result:
