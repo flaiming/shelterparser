@@ -230,7 +230,7 @@ RE_DEVIDER = ur'\s*:?\s*(?:<[^>]+>\s*){0,4}\s*:?\s*'
 
 class DetailParser(GenericParser):
 
-    RE_DATE_CREATED = ur'Datum (?:předání pejska do útulku|předání do útulku|přijetí do útulku|a čas odchytu|nálezu|přijetí|nalezení)'
+    RE_DATE_CREATED = ur'(?:Datum (?:předání pejska do útulku|předání do útulku|přijetí do útulku|a čas odchytu|nálezu|přijetí|nalezení)|v útulku od)'
     RE_AGE = ur'\b(?:Stáří|Věk)\b'
 
     def __init__(self, html, url):
@@ -293,23 +293,17 @@ class DetailParser(GenericParser):
 
     def get_date_created(self):
         if self.accuracy == Accuracy.NORMAL:
-            result = re.findall(self.RE_DATE_CREATED + RE_DEVIDER + ur'([\d.,: ]+)', self.html, flags=re.I | re.U)
+            result = re.findall(self.RE_DATE_CREATED + RE_DEVIDER + ur'([\w\d.,: ]+)', self.html, flags=re.I | re.U)
         elif self.accuracy == Accuracy.LOW:
             result = re.findall(ur'\b\d{1,4}(?:-|\.|,)\d{1,4}(?:-|\.|,)\d{1,4}\b', self.html, flags=re.I | re.U)
+        date = None
         if result:
             raw = result[0].strip()
             # remove spaces around dots
             raw = re.sub(ur'\s*(\.)\s*', r'\1', raw)
-            parts = raw.split(' ')
-            date = utils.parse_date(parts[0])
-            if date:
-                if len(parts) > 1:
-                    hour, minute = utils.parse_time(parts[1])
-                    date = datetime.datetime(date.year, date.month, date.day, hour, minute)
-                else:
-                    date = datetime.datetime(date.year, date.month, date.day)
-            return date
-        return None
+            date_date = utils.parse_date(raw)
+            date = datetime.datetime(date_date.year, date_date.month, date_date.day)
+        return date
 
     def get_street(self):
         result = re.findall(ur'Místo\s+(?:odchytu|nalezení|nálezu)' + RE_DEVIDER + ur'([\w\d()., _-]+)', self.html, flags=re.I | re.U)

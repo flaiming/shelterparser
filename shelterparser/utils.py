@@ -1,5 +1,21 @@
+# -*- coding: utf-8 -*-
 import re
 import datetime
+
+RE_MONTHS = (
+    (ur"\bLed(?:en|n(?:a|u|e|em))\b", 1),
+    (ur"\bÚnor(?:a|u|e|em)\b", 2),
+    (ur"\bBřez(?:en|n(?:a|u|e|em))\b", 3),
+    (ur"\bDub(?:en|n(?:a|u|e|em))\b", 4),
+    (ur"\bKvět(?:en|n(?:a|u|e|em))\b", 5),
+    (ur"\bČerv(?:en|n(?:a|u|e|em))\b", 6),
+    (ur"\bČerven(?:ec|c(?:i|e|em))\b", 7),
+    (ur"\bSrp(?:en|n(?:a|u|e|em))\b", 8),
+    (ur"\bZáří", 9),
+    (ur"\bŘíj(?:en|n(?:a|u|e|em))\b", 10),
+    (ur"\bListopad(?:u|e|em)\b", 11),
+    (ur"\bProsin(?:ec|c(?:i|e|em))\b", 12),
+)
 
 
 def unite_url(base_url, url):
@@ -31,20 +47,38 @@ def get_domain_from_url(url):
 
 
 def parse_date(date):
+    # search for standart time devider (.|/)
     raw_parts = re.split(u'\.|/', date)
-    parts = []
-    for i in range(len(raw_parts)):
-        try:
-            parts.append(int(re.sub(ur'\D+', '', raw_parts[i])))
-        except ValueError:
-            pass
-    if len(parts) == 3:
-        if int(parts[0]) > 1990:
-            return datetime.date(parts[0], parts[1], parts[2])
-        elif int(parts[2]) > 1990:
-            return datetime.date(parts[2], parts[1], parts[0])
-    elif len(parts) == 2:
-        return datetime.date(parts[1], parts[0], 1)
+    if len(raw_parts) > 1:
+        parts = []
+        for i in range(len(raw_parts)):
+            try:
+                parts.append(int(re.sub(ur'\D+', '', raw_parts[i])))
+            except ValueError:
+                pass
+        if len(parts) >= 3:
+            if int(parts[0]) > 1990:
+                return datetime.date(parts[0], parts[1], parts[2])
+            elif int(parts[2]) > 1990:
+                return datetime.date(parts[2], parts[1], parts[0])
+        else:
+            return datetime.date(parts[1], parts[0], 1)
+    else:
+        # search for month name
+        month = None
+        year = None
+        for month_re, month_num in RE_MONTHS:
+            if re.match(month_re, date, flags=re.I | re.U):
+                month = month_num
+        # search for year
+        result = re.findall(ur"\d{4}", date)
+        if result:
+            year_raw = int(result[0])
+            # validate year
+            if year_raw > 1960 and year_raw < 2050:
+                year = year_raw
+        if year:
+            return datetime.date(year, month if month else 1, 1)
     return None
 
 
