@@ -78,12 +78,16 @@ class GenericParser(object):
         if result:
             return result
         # search in siblings
+        results = []
         for e in roundrobin(elem.previous_siblings, elem.next_siblings):
             res = self.__find_nearest_descendant_elems(e, tag, id_name=id_name, class_name=class_name)
             res = self.__filter_elements_without_text(res)
             # print "Result: %s" % repr(res)
             if res:
-                return res
+                for r in res:
+                    results.append(r)
+        if results:
+            return results
         # print "Nenalezeno v sourozencich, jdu na rodice (depth=%d)" % depth
         if depth > 0:
             return self._find_nearest_elems(elem.parent, tag, id_name=id_name, class_name=class_name, depth=depth - 1)
@@ -98,10 +102,10 @@ class GenericParser(object):
         if not hasattr(elem, 'name'):
             # element is probably string
             return []
-        #print "Element: %s" % elem.name
+        # print "Element: %s" % elem.name
         if elem.name == tag:
             if id_name == "" or elem['id'] == id_name:
-                if tag == "" or class_name in elem['class']:
+                if tag == "" or (elem.has_attr('class') and class_name in elem['class']):
                     return elem
         # search in children
         if hasattr(elem, 'find_all'):
@@ -153,41 +157,51 @@ class GenericParser(object):
             children = parent_stats[k]
             children_ok = True
             for i in range(1, len(children)):
-                if self._get_string_difference(children[i - 1]['href'], children[i]['href']) < 0.93:
+                if self._get_string_difference(children[i - 1]['href'], children[i]['href']) < 0.9:
                     children_ok = False
                     break
             if children_ok:
                 best_children = children
                 break
-        # print "Best children: %s" % best_children
         return best_children
 
     def _get_string_difference(self, a, b):
-        difference = difflib.SequenceMatcher(None, a, b).ratio()
+        difference = difflib.SequenceMatcher(None, a, b).quick_ratio()
         return difference
 
 
 class HtmlParser(GenericParser):
 
+    def _check_link(self, link):
+        if link['href'].startswith('http'):
+            domain = utils.get_domain_from_url(link['href'])
+            shelter_domain = utils.get_domain_from_url(self.url)
+            # print "Comparing domains: %s vs %s" % (domain, shelter_domain)
+            if domain != shelter_domain:
+                # print "Discarding link %s" % link
+                return False
+        # remove relative links, like "./"
+        return not re.match(r'\.?/', link['href'])
+
     def get_urls(self):
         links = []
-        for link in self.soup.find_all('a'):
-            if link.find('img'):
-                if link['href'].startswith('http'):
-                    domain = utils.get_domain_from_url(link['href'])
-                    shelter_domain = utils.get_domain_from_url(self.url)
-                    # print "Comparing domains: %s vs %s" % (domain, shelter_domain)
-                    if domain != shelter_domain:
-                        # print "Discarding link %s" % link
-                        continue
-                if re.match(r'\.?/', link['href']):
-                    continue
+        # first try - find links by searching for "Zobrazit vice" etc.
+        for link in self.soup.find_all('a', text=re.compile(ur'^zobrazit více', flags=re.I | re.U)):
+            if self._check_link(link):
                 links.append(link)
-        siblings = self._filter_siblings(
-            links,
-            max_parent_depth=4
-        )
-        return map(lambda x: x['href'], siblings)
+
+        # second try - find animal links by "a img"
+        if not links:
+            for link in self.soup.find_all('a'):
+                if link.find('img') and self._check_link(link):
+                    links.append(link)
+            links = self._filter_siblings(
+                links,
+                max_parent_depth=4
+            )
+            # print "Siblings: %s" % links
+        # print "Links: %s" % links
+        return map(lambda x: x['href'], links)
 
     def get_pages(self):
         siblings = self._filter_siblings(
@@ -201,7 +215,6 @@ class HtmlParser(GenericParser):
                 pass
             else:
                 links.append(link['href'])
-        # print "Final page links: %s" % links
         return links
 
 
@@ -250,6 +263,7 @@ class DetailParser(GenericParser):
             'note',
             'photos',
             'castrated',
+            'breed',
         ]
         self.category = None
 
@@ -302,7 +316,8 @@ class DetailParser(GenericParser):
             # remove spaces around dots
             raw = re.sub(ur'\s*(\.)\s*', r'\1', raw)
             date_date = utils.parse_date(raw)
-            date = datetime.datetime(date_date.year, date_date.month, date_date.day)
+            if date_date:
+                date = datetime.datetime(date_date.year, date_date.month, date_date.day)
         return date
 
     def get_street(self):
@@ -438,6 +453,13 @@ class DetailParser(GenericParser):
         if result:
             castrated = utils.parse_bool(result[0].strip())
         return castrated
+
+    def get_breed(self):
+        result = re.findall(ur'Rasa' + RE_DEVIDER + ur'([\w,. -]+)', unicode(self.html), flags=re.U | re.I)
+        breed = ""
+        if result:
+            breed = result[0].strip()
+        return breed
 
     def get_photos(self):
         common_parent = self._get_common_parent()

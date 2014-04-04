@@ -6,6 +6,8 @@ import hashlib
 import traceback
 import sys
 import os
+import datetime
+from ddt import ddt, data, unpack
 # added parent path so we can import shelterparser module
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -15,9 +17,17 @@ from shelterparser import utils
 # ID of shelter, when we want to limit tests to only one shelter
 SHELTER_ID = None
 
+_counter = 0
+
 
 class StopShelterTestGeneration(Exception):
     pass
+
+
+def _get_counter():
+    global _counter
+    _counter += 1
+    return _counter
 
 
 class ShelterImporterTester(ShelterImporter):
@@ -25,30 +35,33 @@ class ShelterImporterTester(ShelterImporter):
     def __init__(self, url, folder):
         super(ShelterImporterTester, self).__init__(url)
         self.folder = folder
-        self.counter = 0
 
         self.data = importlib.import_module("test_data.%s.%s.data" % (utils.name_from_url(url), utils.name_from_url_rest(url)))
         print "Imported data: %s" % self.data
 
-    def __get_hash(self, url=""):
-        self.counter += 1
-        return hashlib.md5(str(self.counter) + url).hexdigest()
+    def _iter_detail_urls(self):
+        detail_urls = []
+        try:
+            for url in super(ShelterImporterTester, self)._iter_detail_urls(first_page_only=True):
+                print "Detail URL: %s" % url
+                detail_urls.append(url)
+        except StopIteration:
+            pass
 
-    def _get_detail_urls(self):
-        detail_urls = super(ShelterImporterTester, self)._get_detail_urls()
+        setattr(ListParserTest, "pokus_test", test_generator_equal(1, 1))
 
-        print "Testing detail URLs..."
-        counter = 0
-        for url in detail_urls:
-            print "Testing detail URL %s" % url
-            test_name = 'test_detail_url_%s_%s' % (utils.name_from_url(self.url), self.__get_hash())
-            test = test_generator_equal(url, self.data.URL_REWRITES[counter + 1][0])
+        print "Testing detail URLs...%s" % detail_urls
+        for url, _ in self.data.URL_REWRITES[1:]:
+            print "Testing detail URL presence: %s" % url
+            test_name = 'test_detail_url_%s_%d' % (utils.name_from_url(self.url), _get_counter())
+            test = test_generator_true(url in detail_urls)
             setattr(ListParserTest, test_name, test)
-            counter += 1
 
-        return detail_urls
+        for url in detail_urls:
+            yield url
 
     def _get_data_from_url(self, url):
+        print "Trying rewrite URL %s..." % url
         if url in dict(self.data.URL_REWRITES):
             url = dict(self.data.URL_REWRITES)[url]
             print "Url rewrited to '%s'" % url
@@ -64,9 +77,9 @@ class ShelterImporterTester(ShelterImporter):
         for key, test_value in self.data.ANIMALS[url].items():
 
             animal_data = animal.get_dict()
-            val = animal_data[key] if animal_data.has_key(key) else None
+            val = animal_data[key] if key in animal_data else None
 
-            test_name = 'test_animal_%s_%s_%s_%s' % (utils.name_from_url(self.url), utils.name_from_url_rest(self.url), key, self.__get_hash(url))
+            test_name = 'test_animal_%s_%s_%s_%d' % (utils.name_from_url(self.url), utils.name_from_url_rest(self.url), key, _get_counter())
             test = test_generator_equal(test_value, val)
             # print "Adding test '%s'%s: %s" % (test_name, key, test_value)
             setattr(DetailParserTest, test_name, test)
@@ -77,8 +90,31 @@ class ShelterImporterTester(ShelterImporter):
         return h.hexdigest()
 
 
+@ddt
 class DetailParserTest(unittest.TestCase):
-    pass
+
+    @data(
+        (u"2011", datetime.date(2011, 1, 1)),
+        (u"1980 Leden", datetime.date(1980, 1, 1)),
+        (u"únor 2013", datetime.date(2013, 2, 1)),
+        (u"Březen 2014", datetime.date(2014, 3, 1)),
+        (u"duben 2014", datetime.date(2014, 4, 1)),
+        (u"květen 2014", datetime.date(2014, 5, 1)),
+        (u"červen 2014", datetime.date(2014, 6, 1)),
+        (u"červenec 2014", datetime.date(2014, 7, 1)),
+        (u"srpen 2014", datetime.date(2014, 8, 1)),
+        (u"září 2014", datetime.date(2014, 9, 1)),
+        (u"říjen 2014", datetime.date(2014, 10, 1)),
+        (u"listopad 2014", datetime.date(2014, 11, 1)),
+        (u"prosinec 2014", datetime.date(2014, 12, 1)),
+        (u"11/2012", datetime.date(2012, 11, 1)),
+        (u"23.2.1999", datetime.date(1999, 2, 23)),
+        (u"01.02.2003", datetime.date(2003, 2, 1)),
+        (u"15/11/2014", datetime.date(2014, 11, 15)),
+    )
+    @unpack
+    def test_utils_parser_date(self, orig, expected):
+        self.assertEqual(utils.parse_date(orig), expected)
 
 
 class ListParserTest(unittest.TestCase):

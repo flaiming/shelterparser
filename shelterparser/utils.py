@@ -4,7 +4,7 @@ import datetime
 
 RE_MONTHS = (
     (ur"\bLed(?:en|n(?:a|u|e|em))\b", 1),
-    (ur"\bÚnor(?:a|u|e|em)\b", 2),
+    (ur"\bÚnor(?:a|u|e|em)?\b", 2),
     (ur"\bBřez(?:en|n(?:a|u|e|em))\b", 3),
     (ur"\bDub(?:en|n(?:a|u|e|em))\b", 4),
     (ur"\bKvět(?:en|n(?:a|u|e|em))\b", 5),
@@ -13,7 +13,7 @@ RE_MONTHS = (
     (ur"\bSrp(?:en|n(?:a|u|e|em))\b", 8),
     (ur"\bZáří", 9),
     (ur"\bŘíj(?:en|n(?:a|u|e|em))\b", 10),
-    (ur"\bListopad(?:u|e|em)\b", 11),
+    (ur"\bListopad(?:u|e|em)?\b", 11),
     (ur"\bProsin(?:ec|c(?:i|e|em))\b", 12),
 )
 

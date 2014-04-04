@@ -27,6 +27,7 @@ class AnimalModel():
         'chipped': bool,
         'handicapped': bool,
         'photos': list,
+        'breed': basestring,
         'url': basestring,
     }
 

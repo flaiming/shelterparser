@@ -47,6 +47,15 @@ SHELTERS = [
             "http://www.zooliberec.cz/archa/cz/utulek/kocky/utulkova-nabidka": AnimalState.ADOPTION,
         }
     },
+    {
+        "shelter_id": 4,
+        "shelter_name": u"Azylpes Krásný Les u Frýdlantu (LOZ)",
+        "shelter_url": "http://azylpes.cz/",
+        "data_type": DataType.HTML,
+        "urls": {
+            "http://azylpes.cz/zvirata": AnimalState.ADOPTION,
+        }
+    },
 ]
 
 
@@ -75,7 +84,7 @@ class ShelterImporter(object):
         animal.set('url', url)
         return animal
 
-    def _iter_detail_urls(self):
+    def _iter_detail_urls(self, first_page_only=False):
         parser = self._get_parser(self.url)
         for page_url in parser.get_pages():
             if page_url != self.url:
@@ -84,6 +93,8 @@ class ShelterImporter(object):
             print "Opened page url: '%s'" % page_url
             for detail_url in parser.get_urls():
                 yield unite_url(self.url, detail_url)
+            if first_page_only:
+                break
 
     def _get_parser(self, url):
         data = self._get_data_from_url(url)
