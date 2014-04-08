@@ -273,9 +273,6 @@ class DetailParser(GenericParser):
             method = getattr(self, "get_%s" % field)
             result = method()
             animal.set(field, result)
-
-        if not animal.is_satisfactory():
-            raise Exception("!!! Animal doesn't have all obligatory parameters! %s" % animal.get_dict())
         return animal
 
     def get_name(self):
