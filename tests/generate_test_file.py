@@ -3,6 +3,8 @@
 import os
 import io
 import sys
+import argparse
+import importlib
 import pprint
 import traceback
 # added parent path so we can import shelterparser module
@@ -16,18 +18,25 @@ GENERATE_MAX_ANIMALS = 5
 
 class ShelterImporterTestGenerator(ShelterImporter):
 
-    def __init__(self, url, folder):
+    def __init__(self, url, folder, regenerate):
         super(ShelterImporterTestGenerator, self).__init__(url)
         self.folder = folder
+        self.regenerate = regenerate
         self.url_rewrites = []
         self.animals = {}
         self.counter = 1
 
-        # create folder if not exists
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-            # create __init__.py
-            open(os.path.join(folder, "__init__.py"), 'a').close()
+        if self.regenerate:
+            data = importlib.import_module("test_data.%s.%s.data" % (utils.name_from_url(url), utils.name_from_url_rest(url)))
+            print "Imported data: %s" % data
+            self.url_rewrites = data.URL_REWRITES
+            self.animals = data.ANIMALS
+        else:
+            # create folder if not exists
+            if not os.path.exists(folder):
+                os.makedirs(folder)
+                # create __init__.py
+                open(os.path.join(folder, "__init__.py"), 'a').close()
 
     def _iter_detail_urls(self):
         for url in super(ShelterImporterTestGenerator, self)._iter_detail_urls():
@@ -35,13 +44,21 @@ class ShelterImporterTestGenerator(ShelterImporter):
             yield url
 
     def _get_data_from_url(self, url):
-        data = super(ShelterImporterTestGenerator, self)._get_data_from_url(url)
+        data = ""
+        if self.regenerate:
+            file_path = dict(self.url_rewrites)[url]
+            print "File path: %s" % file_path
+            with io.open(file_path, 'r') as f:
+                data = f.read()
+                print len(data)
+        else:
+            data = super(ShelterImporterTestGenerator, self)._get_data_from_url(url)
+            file_path = self.__create_file_path("file")
 
-        file_path = self.__create_file_path("file")
-        with io.open(file_path, 'w', encoding="utf-8") as f:
-            print "Writing to file %s..." % file_path
-            f.write(unicode(data))
-            self.url_rewrites.append((url, file_path))
+            with io.open(file_path, 'w', encoding="utf-8") as f:
+                print "Writing to file %s..." % file_path
+                f.write(unicode(data))
+                self.url_rewrites.append((url, file_path))
         return data
 
     def _get_animal(self, url):
@@ -74,16 +91,15 @@ def init_folder(folder):
 def main():
     test_folder = "test_data"
     url = ""
-    if len(sys.argv) >= 2:
-        url = sys.argv[1]
-    else:
-        print """
-        Generates test files for given URL.
 
-        Parameter is URL of webpage with animal list.
-        $ generate_test_file.py <url>
-        """
-        return False
+    parser = argparse.ArgumentParser(description='Generate test files for given shelter URL.')
+    parser.add_argument('url', help='URL of shelter with animal list.')
+    parser.add_argument('-r', '--regenerate', action='store_true', help='regenerate current tests using already downloaded files.')
+
+    args = parser.parse_args()
+
+    url = args.url
+    regenerate = args.regenerate
     print "Processing url '%s'..." % (url)
     try:
 
@@ -91,7 +107,7 @@ def main():
         root_folder = os.path.join(test_folder, utils.name_from_url(url))
         init_folder(root_folder)
 
-        importer = ShelterImporterTestGenerator(url, os.path.join(root_folder, utils.name_from_url_rest(url)))
+        importer = ShelterImporterTestGenerator(url, os.path.join(root_folder, utils.name_from_url_rest(url)), regenerate=regenerate)
         print importer
 
         generated_animals = 0
@@ -103,7 +119,7 @@ def main():
                     break
         except KeyboardInterrupt:
             pass
-        save_file(os.path.join(test_folder, utils.name_from_url(url), utils.name_from_url_rest(url), "data.py"), importer.url_rewrites, importer.animals)
+        #save_file(os.path.join(test_folder, utils.name_from_url(url), utils.name_from_url_rest(url), "data.py"), importer.url_rewrites, importer.animals)
         print "Successfully generated tests for %d animals for URL '%s'." % (generated_animals, url)
     except IOError as e:
         print "Cannot open URL %s: %s" % (url, e.strerror)

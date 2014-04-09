@@ -307,7 +307,7 @@ class DetailParser(GenericParser):
             result = re.findall(self.RE_DATE_CREATED + RE_DEVIDER + ur'([\w\d.,: ]+)', self.html, flags=re.I | re.U)
         elif self.accuracy == Accuracy.LOW:
             result = re.findall(ur'\b\d{1,4}(?:-|\.|,)\d{1,4}(?:-|\.|,)\d{1,4}\b', self.html, flags=re.I | re.U)
-        date = None
+        date = datetime.datetime.now()
         if result:
             raw = result[0].strip()
             # remove spaces around dots
