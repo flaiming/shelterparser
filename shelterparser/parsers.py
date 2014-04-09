@@ -307,7 +307,7 @@ class DetailParser(GenericParser):
             result = re.findall(self.RE_DATE_CREATED + RE_DEVIDER + ur'([\w\d.,: ]+)', self.html, flags=re.I | re.U)
         elif self.accuracy == Accuracy.LOW:
             result = re.findall(ur'\b\d{1,4}(?:-|\.|,)\d{1,4}(?:-|\.|,)\d{1,4}\b', self.html, flags=re.I | re.U)
-        date = None
+        date = datetime.datetime.now()
         if result:
             raw = result[0].strip()
             # remove spaces around dots
@@ -356,9 +356,6 @@ class DetailParser(GenericParser):
     def get_birth_date(self):
 
         date_created = self.get_date_created()
-        if not date_created:
-            # we don't know from when to compute birth date
-            return None
 
         result = re.findall(self.RE_AGE + RE_DEVIDER + ur'([\w\d.,/ -]+)', self.html, flags=re.I | re.U)
         age = None
@@ -437,7 +434,7 @@ class DetailParser(GenericParser):
         return weight
 
     def get_note(self):
-        pattern = re.compile(ur'(?:Poznámky|Popis):', re.U | re.I)
+        pattern = re.compile(ur'(?:Poznámky|Popis|Charakteristika):', re.U | re.I)
         tag = self.soup.find(text=pattern)
         note = ""
         if tag:
@@ -452,7 +449,7 @@ class DetailParser(GenericParser):
         return castrated
 
     def get_breed(self):
-        result = re.findall(ur'Rasa' + RE_DEVIDER + ur'([\w,. -]+)', unicode(self.html), flags=re.U | re.I)
+        result = re.findall(ur'(?:Rasa|Plemeno)\b' + RE_DEVIDER + ur'([\w,. -]+)', unicode(self.html), flags=re.U | re.I)
         breed = ""
         if result:
             breed = result[0].strip()
