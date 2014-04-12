@@ -122,10 +122,8 @@ class GenericParser(object):
         for el in roundrobin([elem], elem.next_elements, elem.previous_elements):
             if hasattr(el, "get_text"):
                 text = el.get_text(" ").strip()
-                if not pattern.match(text) and re.sub(pattern, '', text).strip() != '':
+                if pattern.match(text) and re.sub(pattern, '', text).strip() != '':
                     return re.sub(pattern, '', text).strip()
-            elif el != elem:
-                return el.string.strip()
             limit -= 1
             if limit < 0:
                 break
@@ -181,12 +179,12 @@ class HtmlParser(GenericParser):
                 # print "Discarding link %s" % link
                 return False
         # remove relative links, like "./"
-        return not re.match(r'\.?/', link['href'])
+        return not re.match(r'\./', link['href'])
 
     def get_urls(self):
         links = []
         # first try - find links by searching for "Zobrazit vice" etc.
-        for link in self.soup.find_all('a', text=re.compile(ur'^zobrazit více', flags=re.I | re.U)):
+        for link in self.soup.find_all('a', text=re.compile(ur'^\s*(?:zobrazit více|více informací)\s*', flags=re.I | re.U)):
             if self._check_link(link):
                 links.append(link)
 
@@ -245,6 +243,7 @@ class DetailParser(GenericParser):
 
     RE_DATE_CREATED = ur'(?:Datum (?:předání pejska do útulku|předání do útulku|přijetí do útulku|a čas odchytu|nálezu|přijetí|nalezení)|v útulku od)'
     RE_AGE = ur'\b(?:Stáří|Věk)\b'
+    RE_GENDER = ur'\bPohlaví\b'
 
     def __init__(self, html, url):
         super(DetailParser, self).__init__(html, url)
@@ -284,12 +283,17 @@ class DetailParser(GenericParser):
                 common_parent = common_parent.parent
                 heading = common_parent.find(re.compile("^h(?:1|2|3|4)$"))
                 if heading:
-                    name = unicode(heading.find(text=True, recursive=False))
+                    name = heading.find(text=True, recursive=False)
+                    if not name:
+                        # try recursive strategy
+                        name = heading.get_text()
+                if name:
+                    name = unicode(name)
                     break
         return name.strip()
 
     def get_reg_num(self):
-        result = re.findall(ur'Evidenční\s+číslo' + RE_DEVIDER + ur'([\w\d/_ -]+)', self.html, flags=re.I | re.U)
+        result = re.findall(ur'\b(?:Evidenční číslo|ev.č.)' + RE_DEVIDER + ur'([\w\d/_ -]+)', self.html, flags=re.I | re.U)
         reg_num = ""
         if result:
             reg_num = result[0].strip()
@@ -307,7 +311,7 @@ class DetailParser(GenericParser):
             result = re.findall(self.RE_DATE_CREATED + RE_DEVIDER + ur'([\w\d.,: ]+)', self.html, flags=re.I | re.U)
         elif self.accuracy == Accuracy.LOW:
             result = re.findall(ur'\b\d{1,4}(?:-|\.|,)\d{1,4}(?:-|\.|,)\d{1,4}\b', self.html, flags=re.I | re.U)
-        date = datetime.datetime.now()
+        date = None
         if result:
             raw = result[0].strip()
             # remove spaces around dots
@@ -327,7 +331,7 @@ class DetailParser(GenericParser):
     def get_gender(self):
 
         if self.accuracy == Accuracy.NORMAL:
-            result = re.findall(ur'Pohlaví' + RE_DEVIDER + ur'(?:<[^>]*>)?\s*(\w+)', self.html, flags=re.I | re.U)
+            result = re.findall(self.RE_GENDER + RE_DEVIDER + ur'(?:<[^>]*>)?\s*(\w+)', self.html, flags=re.I | re.U)
         elif self.accuracy == Accuracy.LOW:
             result = re.findall(ur'\b(pes|kočka|kocour|fena|fenka|samec|samice)\b', self.html, flags=re.I | re.U)
         gender = None
@@ -356,6 +360,9 @@ class DetailParser(GenericParser):
     def get_birth_date(self):
 
         date_created = self.get_date_created()
+        if not date_created:
+            # calculate birth date from now
+            date_created = datetime.datetime.now()
 
         result = re.findall(self.RE_AGE + RE_DEVIDER + ur'([\w\d.,/ -]+)', self.html, flags=re.I | re.U)
         age = None
@@ -438,7 +445,11 @@ class DetailParser(GenericParser):
         tag = self.soup.find(text=pattern)
         note = ""
         if tag:
-            note = self._find_nearest(tag, pattern)
+            for i in range(3):
+                note = self._find_nearest(tag, pattern)
+                if note:
+                    break
+                tag = tag.parent
         return note
 
     def get_castrated(self):
@@ -477,10 +488,17 @@ class DetailParser(GenericParser):
         return []
 
     def _get_common_parent(self):
-        return self._common_parent(
+        common_parent = self._common_parent(
             self.soup.find(text=re.compile(self.RE_AGE, re.U | re.I)),
             self.soup.find(text=re.compile(self.RE_DATE_CREATED, re.U | re.I))
         )
+        if not common_parent:
+            # try different combination
+            common_parent = self._common_parent(
+                self.soup.find(text=re.compile(self.RE_AGE, re.U | re.I)),
+                self.soup.find(text=re.compile(self.RE_GENDER, re.U | re.I))
+            )
+        return common_parent
 
 
 def roundrobin(*iterables):

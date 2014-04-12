@@ -9,6 +9,7 @@ sys.path.append(os.path.abspath('..'))
 
 from shelterparser.parsers import DetailParser
 from shelterparser.openers import Opener
+from shelterparser import utils
 
 
 def main():
@@ -25,8 +26,12 @@ def main():
     print "Processing '%s'..." % (path)
     try:
 
+        base_url = utils.get_base_url(path)
+        if base_url == path:
+            base_url = "http://fakeurl.com"
+
         opener = Opener(path)
-        detail = DetailParser(opener.read(), 'http://www.fakeurl.com')
+        detail = DetailParser(opener.read(), base_url)
         animal = detail.get_animal()
         pprint.pprint(animal.get_dict())
 

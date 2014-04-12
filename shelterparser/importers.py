@@ -56,6 +56,16 @@ SHELTERS = [
             "http://azylpes.cz/zvirata": AnimalState.ADOPTION,
         }
     },
+    {
+        "shelter_id": 5,
+        "shelter_name": u"Psí útulek Lazec",
+        "shelter_url": "http://www.utulekpribram.cz/",
+        "data_type": DataType.HTML,
+        "urls": {
+            "http://www.utulekpribram.cz/index.php/psi-k-adopci": AnimalState.ADOPTION,
+            "http://www.utulekpribram.cz/index.php/nalezeni-psi": AnimalState.FOUND,
+        }
+    },
 ]
 
 
