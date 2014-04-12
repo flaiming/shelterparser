@@ -119,7 +119,7 @@ def main():
                     break
         except KeyboardInterrupt:
             pass
-        #save_file(os.path.join(test_folder, utils.name_from_url(url), utils.name_from_url_rest(url), "data.py"), importer.url_rewrites, importer.animals)
+        save_file(os.path.join(test_folder, utils.name_from_url(url), utils.name_from_url_rest(url), "data.py"), importer.url_rewrites, importer.animals)
         print "Successfully generated tests for %d animals for URL '%s'." % (generated_animals, url)
     except IOError as e:
         print "Cannot open URL %s: %s" % (url, e.strerror)
