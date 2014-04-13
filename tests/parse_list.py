@@ -9,15 +9,20 @@ sys.path.append(os.path.abspath('..'))
 
 from shelterparser.parsers import HtmlParser
 from shelterparser.openers import Opener
+from shelterparser import utils
 
 
 def main():
     path = ""
-    domain = "http://www.fakeurl.com"
+    base_url = "http://fakeurl.com"
     if len(sys.argv) >= 2:
         path = sys.argv[1]
         if len(sys.argv) == 3:
-            domain = sys.argv[2]
+            base_url = sys.argv[2]
+        else:
+            base = utils.get_base_url(path)
+            if base != path:
+                base_url = base
     else:
         print """
         Parse animal list from URL or file.
@@ -29,7 +34,7 @@ def main():
     try:
 
         opener = Opener(path)
-        parser = HtmlParser(opener.read(), domain)
+        parser = HtmlParser(opener.read(), base_url)
         for url in parser.get_urls():
             pprint.pprint(url)
 

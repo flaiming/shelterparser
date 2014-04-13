@@ -12,6 +12,7 @@ sys.path.append(os.path.abspath('..'))
 
 from shelterparser import utils
 from shelterparser.importers import ShelterImporter
+from shelterparser.openers import Opener
 
 GENERATE_MAX_ANIMALS = 5
 
@@ -50,12 +51,13 @@ class ShelterImporterTestGenerator(ShelterImporter):
             print "File path: %s" % file_path
             with io.open(file_path, 'r') as f:
                 data = f.read()
-                print len(data)
         else:
-            data = super(ShelterImporterTestGenerator, self)._get_data_from_url(url)
+            opener = Opener(url)
+            data = opener.read()
+
             file_path = self.__create_file_path("file")
 
-            with io.open(file_path, 'w', encoding="utf-8") as f:
+            with io.open(file_path, 'w', encoding=opener.get_encoding()) as f:
                 print "Writing to file %s..." % file_path
                 f.write(unicode(data))
                 self.url_rewrites.append((url, file_path))
@@ -64,7 +66,15 @@ class ShelterImporterTestGenerator(ShelterImporter):
     def _get_animal(self, url):
         animal = super(ShelterImporterTestGenerator, self)._get_animal(url)
         print "Creating test files for animal..."
-        self.animals[url] = animal.get_dict()
+        if animal.is_satisfactory():
+            self.animals[url] = animal.get_dict()
+        else:
+            print "Animal does not have satisfactory attributes! Removing from test files."
+            for i in range(0, len(self.url_rewrites)):
+                if self.url_rewrites[i][0] == url:
+                    os.remove(self.url_rewrites[i][1])
+                    del self.url_rewrites[i]
+                    break
         return animal
 
     def __create_file_path(self, base_name):

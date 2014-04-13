@@ -111,6 +111,7 @@ class DetailParserTest(unittest.TestCase):
         (u"23.2.1999", datetime.date(1999, 2, 23)),
         (u"01.02.2003", datetime.date(2003, 2, 1)),
         (u"15/11/2014", datetime.date(2014, 11, 15)),
+        (u"F-M 2.2.2014", datetime.date(2014, 2, 2)),
     )
     @unpack
     def test_utils_parser_date(self, orig, expected):

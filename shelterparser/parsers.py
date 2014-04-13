@@ -73,22 +73,17 @@ class GenericParser(object):
         return None
 
     def _find_nearest_elems(self, elem, tag, id_name="", class_name="", depth=4):
+        if not elem:
+            return []
         result = self.__find_nearest_descendant_elems(elem, tag, id_name, class_name)
         result = self.__filter_elements_without_text(result)
         if result:
+            if depth > 0:
+                # try go deeper for more results
+                res = self._find_nearest_elems(elem.parent, tag, id_name=id_name, class_name=class_name, depth=depth - 1)
+                if res:
+                    return res
             return result
-        # search in siblings
-        results = []
-        for e in roundrobin(elem.previous_siblings, elem.next_siblings):
-            res = self.__find_nearest_descendant_elems(e, tag, id_name=id_name, class_name=class_name)
-            res = self.__filter_elements_without_text(res)
-            # print "Result: %s" % repr(res)
-            if res:
-                for r in res:
-                    results.append(r)
-        if results:
-            return results
-        # print "Nenalezeno v sourozencich, jdu na rodice (depth=%d)" % depth
         if depth > 0:
             return self._find_nearest_elems(elem.parent, tag, id_name=id_name, class_name=class_name, depth=depth - 1)
         return []
@@ -309,7 +304,7 @@ class DetailParser(GenericParser):
 
     def get_date_created(self):
         if self.accuracy == Accuracy.NORMAL:
-            result = re.findall(self.RE_DATE_CREATED + RE_DEVIDER + ur'([\w\d.,: ]+)', self.html, flags=re.I | re.U)
+            result = re.findall(self.RE_DATE_CREATED + RE_DEVIDER + ur'([\w\d.,: -]+)', self.html, flags=re.I | re.U)
         elif self.accuracy == Accuracy.LOW:
             result = re.findall(ur'\b\d{1,4}(?:-|\.|,)\d{1,4}(?:-|\.|,)\d{1,4}\b', self.html, flags=re.I | re.U)
         date = None
@@ -470,7 +465,7 @@ class DetailParser(GenericParser):
     def get_photos(self):
         common_parent = self._get_common_parent()
         if common_parent:
-            results = self._find_nearest_elems(common_parent, 'a', depth=5)
+            results = self._find_nearest_elems(common_parent, 'a', depth=6)
             photos = []
             for a in results:
                 if re.match(ur'.+\.(?:jpg|jpeg|gif|png).*', a['href'], flags=re.I | re.U):

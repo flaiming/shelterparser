@@ -56,6 +56,15 @@ SHELTERS = [
             "http://azylpes.cz/zvirata": AnimalState.ADOPTION,
         }
     },
+    {
+        "shelter_id": 5,
+        "shelter_name": u"Útulek Sedliště",
+        "shelter_url": "http://www.utulekpropsy.org/",
+        "data_type": DataType.HTML,
+        "urls": {
+            "http://www.utulekpropsy.org/nabidka-psu.html": AnimalState.ADOPTION,
+        }
+    },
 ]
 
 
