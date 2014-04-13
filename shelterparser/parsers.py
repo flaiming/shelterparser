@@ -468,7 +468,7 @@ class DetailParser(GenericParser):
             results = self._find_nearest_elems(common_parent, 'a', depth=6)
             photos = []
             for a in results:
-                if re.match(ur'.+\.(?:jpg|jpeg|gif|png).*', a['href'], flags=re.I | re.U):
+                if a.has_attr('href') and re.match(ur'.+\.(?:jpg|jpeg|gif|png).*', a['href'], flags=re.I | re.U):
                     if a['href'].startswith('http'):
                         photos.append(a['href'].replace('\\', '/'))
                     elif a['href'].startswith('/'):

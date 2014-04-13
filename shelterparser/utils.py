@@ -61,7 +61,7 @@ def parse_date(date):
                 return datetime.date(parts[0], parts[1], parts[2])
             elif int(parts[2]) > 1990:
                 return datetime.date(parts[2], parts[1], parts[0])
-        elif parts[1] > 1990 and parts[0] in range(1, 13):
+        elif len(parts) > 1 and parts[1] > 1990 and parts[0] in range(1, 13):
             return datetime.date(parts[1], parts[0], 1)
     else:
         # search for month name
