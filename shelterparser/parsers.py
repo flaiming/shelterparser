@@ -193,9 +193,10 @@ class HtmlParser(GenericParser):
             for link in self.soup.find_all('a'):
                 if link.find('img') and self._check_link(link):
                     links.append(link)
+
             links = self._filter_siblings(
                 links,
-                max_parent_depth=4
+                max_parent_depth=5
             )
             # print "Siblings: %s" % links
         # print "Links: %s" % links
@@ -361,8 +362,8 @@ class DetailParser(GenericParser):
 
         date_created = self.get_date_created()
         if not date_created:
-            # calculate birth date from now
-            date_created = datetime.datetime.now()
+            # cannot calculate date of birth without date created
+            return None
 
         result = re.findall(self.RE_AGE + RE_DEVIDER + ur'([\w\d.,/ -]+)', self.html, flags=re.I | re.U)
         age = None
@@ -477,11 +478,6 @@ class DetailParser(GenericParser):
                         photos.append(a['href'].replace('\\', '/'))
                     elif a['href'].startswith('/'):
                         photos.append(utils.unite_url(self.url, a['href'].replace('\\', '/')))
-                    elif a['href'].startswith('javascript'):
-                        photo = re.sub(ur'[^/]*([a-z0-9/ _-]+\.(?:jpg|jpeg|gif|png))[^/]*', ur'\1', a['href'], flags=re.I | re.U)
-                        if photo:
-                            photo = photo.replace('\\', '/')
-                            photos.append(utils.unite_url(self.base_url, photo))
                     else:
                         photos.append(utils.unite_url(self.base_url, a['href'].replace('\\', '/')))
             return photos

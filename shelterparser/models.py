@@ -57,7 +57,7 @@ class AnimalModel():
         """
         Checks if animal has minimal required attributes
         """
-        obligatory_attrs = ['category', 'gender', 'photos']
+        obligatory_attrs = ['category', 'gender', 'photos', 'date_created']
         for attr in obligatory_attrs:
             if not hasattr(self, attr):
                 return False
