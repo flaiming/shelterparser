@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-import os
 import urllib2
-import tarfile
-import tempfile
 from bs4 import BeautifulSoup
+
+from decorators import retry
 
 
 class Opener(object):
+
+    TIMEOUT = 3
 
     def __init__(self, path, encoding=""):
         self.path = path
@@ -19,10 +20,11 @@ class Opener(object):
     def get_content_type(self):
         return self.content_type
 
+    @retry(IOError)
     def _universal_opener(self):
         data = ""
         if self.path.startswith('http'):
-            response = urllib2.urlopen(self.path)
+            response = urllib2.urlopen(self.path, timeout=self.TIMEOUT)
             self.content_type = response.info().gettype()
             data = response.read()
             try:
