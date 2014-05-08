@@ -159,7 +159,7 @@ class GenericParser(object):
         return best_children
 
     def _get_string_difference(self, a, b):
-        difference = difflib.SequenceMatcher(None, a, b).quick_ratio()
+        difference = difflib.SequenceMatcher(None, a, b).real_quick_ratio()
         return difference
 
 
@@ -191,7 +191,7 @@ class HtmlParser(GenericParser):
 
             links = self._filter_siblings(
                 links,
-                max_parent_depth=5
+                max_parent_depth=6
             )
             # print "Siblings: %s" % links
         # print "Links: %s" % links

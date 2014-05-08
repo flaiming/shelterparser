@@ -65,6 +65,15 @@ SHELTERS = [
             "http://www.utulekpropsy.org/nabidka-psu.html": AnimalState.ADOPTION,
         }
     },
+    {
+        "shelter_id": 6,
+        "shelter_name": u"Psí útulek Ciboušov - Klášterec nad Ohří",
+        "shelter_url": "http://www.pejsciklasterec.cz/",
+        "data_type": DataType.HTML,
+        "urls": {
+            "http://www.pejsciklasterec.cz/index.php/nabidka-pejsku/aktualne-v-utulku": AnimalState.ADOPTION,
+        }
+    },
 ]
 
 
