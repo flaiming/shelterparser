@@ -5,7 +5,10 @@ Parser for Czech animal shelters.
 Currently parsing animals from shelters:
 - http://nadace-tlapka.cz/
 - http://www.mpb.cz/
-- http://www.zooliberec.cz/archa/cz/utulek
+- http://www.zooliberec.cz/archa/cz/utulke
+- http://www.azylpes.cz/
+- http://www.klasterec.cz/cs_ob_priroda_utulek.php
+- http://www.utulekpropsy.org/
 
 This parser is used at [NajdiMazla.cz](http://najdimazla.cz).
 
