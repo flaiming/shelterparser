@@ -150,7 +150,7 @@ class GenericParser(object):
             children = parent_stats[k]
             children_ok = True
             for i in range(1, len(children)):
-                if self._get_string_difference(children[i - 1]['href'], children[i]['href']) < 0.9:
+                if self._get_string_difference(children[i - 1]['href'], children[i]['href']) <= 0.7:
                     children_ok = False
                     break
             if children_ok:
@@ -179,7 +179,7 @@ class HtmlParser(GenericParser):
     def get_urls(self):
         links = []
         # first try - find links by searching for "Zobrazit vice" etc.
-        for link in self.soup.find_all('a', text=re.compile(ur'^\s*(?:zobrazit více|více informací)\s*', flags=re.I | re.U)):
+        for link in self.soup.find_all('a', text=re.compile(ur'^\s*(?:zobrazit více|více informací|Detail)\s*', flags=re.I | re.U)):
             if self._check_link(link):
                 links.append(link)
 
@@ -208,7 +208,7 @@ class HtmlParser(GenericParser):
                 # URL for first link already added
                 pass
             else:
-                links.append(link['href'])
+                links.append(utils.unite_url(self.base_url, link['href']))
         return links
 
 

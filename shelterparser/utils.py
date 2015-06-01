@@ -37,7 +37,7 @@ def get_base_url(url):
     if index >= 0:
         domain = domain[:index]
     part_count = len(domain.split('/'))
-    return "/".join(domain.split('/')[:-1]) if part_count > 3 else domain
+    return "/".join(domain.split('/')[:3]) if part_count > 3 else domain
 
 
 def get_domain_from_url(url):
