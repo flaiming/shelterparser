@@ -62,7 +62,7 @@ SHELTERS = [
         "shelter_url": "http://www.utulekpropsy.org/",
         "data_type": DataType.HTML,
         "urls": {
-            "http://www.utulekpropsy.org/nabidka-psu.html": AnimalState.ADOPTION,
+            "http://www.utulekpropsy.org/nabidka-psu/": AnimalState.ADOPTION,
         }
     },
     {

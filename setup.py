@@ -20,6 +20,7 @@ setup(
     keywords = "animal shelter parser",
     packages=['shelterparser', 'tests'],
     long_description=read('README.md'),
+    zip_safe=False,
     classifiers=[
         "Development Status :: Alpha",
         "Topic :: Utilities",
