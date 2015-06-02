@@ -179,7 +179,7 @@ class HtmlParser(GenericParser):
     def get_urls(self):
         links = []
         # first try - find links by searching for "Zobrazit vice" etc.
-        for link in self.soup.find_all('a', text=re.compile(ur'^\s*(?:zobrazit více|více informací|Detail)\s*', flags=re.I | re.U)):
+        for link in self.soup.find_all('a', text=re.compile(ur'^\s*(?:zobrazit více|více informací|Detail|Číst dál)\s*', flags=re.I | re.U)):
             if self._check_link(link):
                 links.append(link)
 

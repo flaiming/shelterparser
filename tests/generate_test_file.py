@@ -19,8 +19,8 @@ GENERATE_MAX_ANIMALS = 5
 
 class ShelterImporterTestGenerator(ShelterImporter):
 
-    def __init__(self, url, folder, regenerate):
-        super(ShelterImporterTestGenerator, self).__init__(url)
+    def __init__(self, url, default, folder, regenerate):
+        super(ShelterImporterTestGenerator, self).__init__(url, default)
         self.folder = folder
         self.regenerate = regenerate
         self.url_rewrites = []
@@ -105,8 +105,16 @@ def main():
     parser = argparse.ArgumentParser(description='Generate test files for given shelter URL.')
     parser.add_argument('url', help='URL of shelter with animal list.')
     parser.add_argument('-r', '--regenerate', action='store_true', help='regenerate current tests using already downloaded files.')
+    parser.add_argument('-g', '--gender', help='default gender')
+    parser.add_argument('-c', '--category', help='default category')
 
     args = parser.parse_args()
+
+    default = {}
+    if args.gender:
+        default['gender'] = args.gender
+    if args.category:
+        default['category'] = args.category
 
     url = args.url
     regenerate = args.regenerate
@@ -117,7 +125,7 @@ def main():
         root_folder = os.path.join(test_folder, utils.name_from_url(url))
         init_folder(root_folder)
 
-        importer = ShelterImporterTestGenerator(url, os.path.join(root_folder, utils.name_from_url_rest(url)), regenerate=regenerate)
+        importer = ShelterImporterTestGenerator(url, default, os.path.join(root_folder, utils.name_from_url_rest(url)), regenerate=regenerate)
         print importer
 
         generated_animals = 0
