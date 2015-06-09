@@ -60,10 +60,6 @@ while True:
         pass
 ```
 
-## Changelog
-
-- 16.3.2014 Added import from http://www.zooliberec.cz/archa/cz/utulek
-
 ## License: Attribution-NonCommercial 3.0
 
 © 2014 [Vojtěch Oram](http://vojtechoram.cz)
