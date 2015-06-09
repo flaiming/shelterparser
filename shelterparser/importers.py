@@ -20,20 +20,16 @@ SHELTERS = [
         "data_type": DataType.HTML,
         "urls": {
             "http://www.mpb.cz/nalezeni-psi/": {
-                "state": AnimalState.FOUND,
-                "default": {'category': CategoryType.DOG}
+                "default": {'category': CategoryType.DOG, 'state': AnimalState.FOUND}
             },
             "http://www.mpb.cz/nalezene-kocky/": {
-                "state": AnimalState.FOUND,
-                "default": {'category': CategoryType.CAT}
+                "default": {'category': CategoryType.CAT, 'state': AnimalState.FOUND}
             },
             "http://www.mpb.cz/psi-k-adopci/": {
-                "state": AnimalState.ADOPTION,
-                "default": {'category': CategoryType.DOG}
+                "default": {'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
             },
             "http://www.mpb.cz/kocky-k-adopci/": {
-                "state": AnimalState.ADOPTION,
-                "default": {'category': CategoryType.CAT}
+                "default": {'category': CategoryType.CAT, 'state': AnimalState.ADOPTION}
             },
         }
     },
@@ -44,7 +40,7 @@ SHELTERS = [
         "data_type": DataType.HTML,
         "urls": {
             "http://nadace-tlapka.cz/nabidka-zvirat/": {
-                "state": AnimalState.ADOPTION,
+                "default": {'state': AnimalState.ADOPTION}
             },
         }
     },
@@ -55,23 +51,18 @@ SHELTERS = [
         "data_type": DataType.HTML,
         "urls": {
             "http://www.zooliberec.cz/archa/cz/utulek/psi/mali-psi": {
-                "state": AnimalState.ADOPTION,
-                "default": {'gender': GenderType.MALE, 'category': CategoryType.DOG}
+                "default": {'gender': GenderType.MALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
             },
             "http://www.zooliberec.cz/archa/cz/utulek/psi/velci-psi": {
-                "state": AnimalState.ADOPTION,
-                "default": {'gender': GenderType.MALE, 'category': CategoryType.DOG}
+                "default": {'gender': GenderType.MALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
             },
             "http://www.zooliberec.cz/archa/cz/utulek/psi/male-feny": {
-                "state": AnimalState.ADOPTION,
-                "default": {'gender': GenderType.FEMALE, 'category': CategoryType.DOG}
+                "default": {'gender': GenderType.FEMALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
             },
             "http://www.zooliberec.cz/archa/cz/utulek/psi/velke-feny": {
-                "state": AnimalState.ADOPTION,
-                "default": {'gender': GenderType.FEMALE, 'category': CategoryType.DOG}
+                "default": {'gender': GenderType.FEMALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
             },
             "http://www.zooliberec.cz/archa/cz/utulek/kocky/utulkova-nabidka": {
-                "state": AnimalState.ADOPTION,
                 "default": {'category': CategoryType.CAT}
             },
         }
@@ -83,7 +74,7 @@ SHELTERS = [
         "data_type": DataType.HTML,
         "urls": {
             "http://azylpes.cz/zvirata": {
-                "state": AnimalState.ADOPTION,
+                "default": {'state': AnimalState.ADOPTION}
             },
         }
     },
@@ -94,8 +85,7 @@ SHELTERS = [
         "data_type": DataType.HTML,
         "urls": {
             "http://www.utulekpropsy.org/nabidka-psu/": {
-                "state": AnimalState.ADOPTION,
-                "default": {'category': CategoryType.DOG}
+                "default": {'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
             },
         }
     },
@@ -106,8 +96,7 @@ SHELTERS = [
         "data_type": DataType.HTML,
         "urls": {
             "http://www.pejsciklasterec.cz/index.php/nabidka-pejsku/aktualne-v-utulku": {
-                "state": AnimalState.ADOPTION,
-                "default": {'category': CategoryType.DOG}
+                "default": {'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
             },
         }
     },
@@ -200,7 +189,7 @@ class AnimalImporter(object):
                     try:
                         animal = next(animal_generator)
                         animal['shelter_id'] = shelter['shelter_id']
-                        animal['state'] = params['state']
+                        #animal['state'] = params['state']
                         yield animal
                     except StopIteration:
                         print "Catched StopIteration."
