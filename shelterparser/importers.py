@@ -3,8 +3,7 @@
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
-from builtins import next
-from builtins import object
+from builtins import object, next, str
 import sys
 import datetime
 import traceback
@@ -68,7 +67,7 @@ SHELTERS = [
                 "default": {'gender': GenderType.FEMALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
             },
             "http://www.zooliberec.cz/archa/cz/utulek/kocky/utulkova-nabidka": {
-                "default": {'category': CategoryType.CAT}
+                "default": {'category': CategoryType.CAT, 'state': AnimalState.ADOPTION}
             },
         }
     },
@@ -134,8 +133,7 @@ class ShelterImporter(object):
         html = self._get_data_from_url(url)
         detail = DetailParser(html, url)
         animal = detail.get_animal()
-        print(url, type(url))
-        animal.set('url', url)
+        animal.set('url', str(url))
 
         # set default data
         for key, val in list(self.default.items()):
@@ -193,7 +191,7 @@ class AnimalImporter(object):
                 animal_generator = importer.iter_animals(self.from_date)
                 while True:
                     try:
-                        animal = next(animal_generator)
+                        animal = animal_generator.next()
                         animal['shelter_id'] = shelter['shelter_id']
                         #animal['state'] = params['state']
                         yield animal
@@ -236,7 +234,7 @@ def main():
 
     importer = AnimalImporter(from_date)
     for animal in importer.iter_animals():
-        print("---Animal: %s" % animal)
+        print("Animal: %s" % animal)
 
     # opener = TarGzOpener('./test_data/kocky-online.cz/data.tar.gz', "windows-1250")
     # importer = KockyOnlineImporter(opener)

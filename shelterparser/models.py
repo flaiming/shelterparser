@@ -31,6 +31,7 @@ class AnimalModel(object):
         'photos': list,
         'breed': str,
         'url': str,
+        'state': str,
     }
 
     def set(self, field, value):

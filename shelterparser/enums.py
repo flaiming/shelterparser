@@ -1,6 +1,7 @@
-from builtins import object
 # -*- coding: utf-8 -*-
 # Enums. Attributes has to be uppercase.
+from __future__ import unicode_literals
+from builtins import object
 
 import re
 

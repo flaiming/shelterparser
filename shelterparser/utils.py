@@ -1,5 +1,6 @@
-from builtins import range
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from builtins import range
 import re
 import datetime
 
