@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import sys
 import os
 import traceback
@@ -24,13 +25,13 @@ def main():
             if base != path:
                 base_url = base
     else:
-        print """
+        print("""
         Parse animal list from URL or file.
 
         $ parse_list.py <url|file> [<url>]
-        """
+        """)
         return False
-    print "Processing '%s'..." % (path)
+    print("Processing '%s'..." % (path))
     try:
 
         opener = Opener(path)
@@ -39,7 +40,7 @@ def main():
             pprint.pprint(url)
 
     except IOError as e:
-        print "Cannot open path %s: %s" % (path, e.strerror)
+        print("Cannot open path %s: %s" % (path, e.strerror))
         traceback.print_exc()
         exit(1)
 

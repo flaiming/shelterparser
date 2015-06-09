@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import sys
 import os
 import traceback
@@ -17,13 +18,13 @@ def main():
     if len(sys.argv) >= 2:
         path = sys.argv[1]
     else:
-        print """
+        print("""
         Parse animal detail from URL or file.
 
         $ parse_detail.py <url|file>
-        """
+        """)
         return False
-    print "Processing '%s'..." % (path)
+    print("Processing '%s'..." % (path))
     try:
 
         base_url = utils.get_base_url(path)
@@ -36,7 +37,7 @@ def main():
         pprint.pprint(animal.get_dict())
 
     except IOError as e:
-        print "Cannot open path %s: %s" % (path, e.strerror)
+        print("Cannot open path %s: %s" % (path, e.strerror))
         traceback.print_exc()
         exit(1)
 

@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-import urllib2
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 
-from decorators import retry
+from .decorators import retry
 
 
 class Opener(object):
@@ -24,7 +28,7 @@ class Opener(object):
     def _universal_opener(self):
         data = ""
         if self.path.startswith('http'):
-            response = urllib2.urlopen(self.path, timeout=self.TIMEOUT)
+            response = urllib.request.urlopen(self.path, timeout=self.TIMEOUT)
             self.content_type = response.info().gettype()
             data = response.read()
             try:
