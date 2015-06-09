@@ -1,3 +1,4 @@
+from builtins import range
 # -*- coding: utf-8 -*-
 import re
 import datetime
@@ -105,7 +106,7 @@ def name_from_url(url):
 
 def name_from_url_rest(url):
     if url.startswith('http'):
-        part = '-'.join(filter(None, url.split('/')[3:]))
+        part = '-'.join([_f for _f in url.split('/')[3:] if _f])
     else:
-        part = '-'.join(filter(None, url.split('/')[1:]))
+        part = '-'.join([_f for _f in url.split('/')[1:] if _f])
     return re.sub(r'[^a-z0-9_-]+', '', part)

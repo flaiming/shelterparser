@@ -1,39 +1,41 @@
+from __future__ import unicode_literals
+from builtins import object, str
 import datetime
 from types import NoneType
 
 
-class AnimalModel():
+class AnimalModel(object):
     """
     Base model class for storing data about animal
     """
 
     fields = {
-        'original_id': basestring,
-        'reg_num': basestring,
-        'name': basestring,
-        'chip_num': basestring,
+        'original_id': str,
+        'reg_num': str,
+        'name': str,
+        'chip_num': str,
         'date_created': datetime.datetime,
-        'street': basestring,
-        'gender': basestring,
-        'category': basestring,
+        'street': str,
+        'gender': str,
+        'category': str,
         'birth_date': datetime.date,
-        'colour': basestring,
+        'colour': str,
         'height': int,
         'weight': int,
-        'note': basestring,
+        'note': str,
         'vaccinated': bool,
         'castrated': bool,
         'dewormed': bool,
         'chipped': bool,
         'handicapped': bool,
         'photos': list,
-        'breed': basestring,
-        'url': basestring,
+        'breed': str,
+        'url': str,
     }
 
     def set(self, field, value):
         # print "Setting %s to %s of type %s" % (field, value, type(value))
-        if field not in self.fields.keys():
+        if field not in list(self.fields.keys()):
             raise AttributeError("Animal do not have field '%s'!" % field)
         if isinstance(value, NoneType):
             return

@@ -1,3 +1,4 @@
+from builtins import object
 # -*- coding: utf-8 -*-
 # Enums. Attributes has to be uppercase.
 
@@ -76,7 +77,7 @@ def resolve_gender_and_category(raw_gender):
             "category": ""
         },
     }
-    for reg, val in gender_categories.items():
+    for reg, val in list(gender_categories.items()):
         if re.match(reg, raw_gender, flags=re.I | re.U):
             return (val['gender'], val['category'])
     return ('', '')

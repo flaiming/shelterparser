@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from builtins import next
+from builtins import object
 import sys
 import datetime
 import traceback
 from bs4 import BeautifulSoup
 import lxml  # needed by BeautifulSoup with features="xml"
 
-from parsers import HtmlParser, RssParser, DetailParser
-from utils import unite_url
-from openers import Opener
-from enums import DataType, AnimalState, GenderType, CategoryType
+from .parsers import HtmlParser, RssParser, DetailParser
+from .utils import unite_url
+from .openers import Opener
+from .enums import DataType, AnimalState, GenderType, CategoryType
 
 
 SHELTERS = [
@@ -122,28 +127,29 @@ class ShelterImporter(object):
 
     def iter_animals(self, from_date=None):
         for detail_url in self._iter_detail_urls():
-            print "Detail url: %s" % (detail_url,)
+            print("Detail url: %s" % (detail_url,))
             animal = self._get_animal(detail_url)
 
             if animal.is_satisfactory():
                 if from_date is not None and not isinstance(from_date, datetime.date):
                     raise Exception("Parameter from_date is not instance of datetime.date!")
                 elif from_date is not None and animal.get('date_created').date() < from_date:
-                    print "Animal has been already imported (created %s)" % animal.get('date_created')
+                    print("Animal has been already imported (created %s)" % animal.get('date_created'))
                     return
                 else:
                     yield animal.get_dict()
             else:
-                print "Animal data not satisfactory --> skipping. %s" % animal.get_dict()
+                print("Animal data not satisfactory --> skipping. %s" % animal.get_dict())
 
     def _get_animal(self, url):
         html = self._get_data_from_url(url)
         detail = DetailParser(html, url)
         animal = detail.get_animal()
+        print(url, type(url))
         animal.set('url', url)
 
         # set default data
-        for key, val in self.default.items():
+        for key, val in list(self.default.items()):
             animal.set(key, val)
         return animal
 
@@ -153,7 +159,7 @@ class ShelterImporter(object):
             if page_url != self.url:
                 # init parser for new page
                 parser = self._get_parser(page_url)
-            print "Opened page url: '%s'" % page_url
+            print("Opened page url: '%s'" % page_url)
             for detail_url in parser.get_urls():
                 yield unite_url(self.url, detail_url)
             if first_page_only:
@@ -190,10 +196,10 @@ class AnimalImporter(object):
 
     def iter_animals(self):
         for shelter in SHELTERS:
-            for import_url, params in shelter['urls'].items():
+            for import_url, params in list(shelter['urls'].items()):
                 default = params['default'] if 'default' in params else {}
                 importer = ShelterImporter(import_url, default=default)
-                print importer
+                print(importer)
 
                 animal_generator = importer.iter_animals(self.from_date)
                 while True:
@@ -203,11 +209,11 @@ class AnimalImporter(object):
                         animal['state'] = params['state']
                         yield animal
                     except StopIteration:
-                        print "Catched StopIteration."
+                        print("Catched StopIteration.")
                         break
                     except Exception as e:
-                        print "===== Catched exception: %s" % e
-                        print traceback.format_exc()
+                        print("===== Catched exception: %s" % e)
+                        print(traceback.format_exc())
                         if self.throw_exceptions:
                             raise
 
@@ -230,18 +236,18 @@ def main():
             parts = from_date.split('-')
             from_date = datetime.datetime(int(parts[0]), int(parts[1]), int(parts[2]))
         except:
-            print "Wrong date! Use format YYYY-MM-DD"
+            print("Wrong date! Use format YYYY-MM-DD")
             return False
     else:
-        print """
+        print("""
         Please run with date from which you want animals
         $ importers.py YYYY-MM-DD
-        """
+        """)
         return False
 
     importer = AnimalImporter(from_date)
     for animal in importer.iter_animals():
-        print "---Animal: %s" % animal
+        print("---Animal: %s" % animal)
 
     # opener = TarGzOpener('./test_data/kocky-online.cz/data.tar.gz', "windows-1250")
     # importer = KockyOnlineImporter(opener)

@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import str
 import time
 from functools import wraps
 
@@ -31,12 +33,12 @@ def retry(ExceptionToCheck, tries=3, delay=3, backoff=2, logger=None):
             while mtries > 1:
                 try:
                     return f(*args, **kwargs)
-                except ExceptionToCheck, e:
+                except ExceptionToCheck as e:
                     msg = "%s, Retrying in %d seconds..." % (str(e), mdelay)
                     if logger:
                         logger.warning(msg)
                     else:
-                        print msg
+                        print(msg)
                     time.sleep(mdelay)
                     mtries -= 1
                     mdelay *= backoff
