@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from __future__ import print_function
+from builtins import str
 import unittest
 import importlib
 import hashlib
@@ -37,34 +40,34 @@ class ShelterImporterTester(ShelterImporter):
         self.folder = folder
 
         self.data = importlib.import_module("test_data.%s.%s.data" % (utils.name_from_url(url), utils.name_from_url_rest(url)))
-        print "Imported data: %s" % self.data
+        print("Imported data: %s" % self.data)
 
     def _iter_detail_urls(self):
         detail_urls = []
         try:
             for url in super(ShelterImporterTester, self)._iter_detail_urls(first_page_only=True):
-                print "Detail URL: %s" % url
+                print("Detail URL: %s" % url)
                 detail_urls.append(url)
         except StopIteration:
             pass
 
         setattr(ListParserTest, "pokus_test", test_generator_equal(1, 1))
 
-        print "Testing detail URLs...%s" % detail_urls
+        print("Testing detail URLs...%s" % detail_urls)
         for url, _ in self.data.URL_REWRITES[1:]:
-            print "Testing detail URL presence: %s" % url
+            print("Testing detail URL presence: %s" % url)
             test_name = 'test_detail_url_%s_%d' % (utils.name_from_url(self.url), _get_counter())
             test = test_generator_true(url in detail_urls)
             setattr(ListParserTest, test_name, test)
 
         for url in detail_urls:
-            yield url
+            yield str(url)
 
     def _get_data_from_url(self, url):
-        print "Trying rewrite URL %s..." % url
+        print("Trying rewrite URL %s..." % url)
         if url in dict(self.data.URL_REWRITES):
             url = dict(self.data.URL_REWRITES)[url]
-            print "Url rewrited to '%s'" % url
+            print("Url rewrited to '%s'" % url)
         else:
             raise StopShelterTestGeneration()
         data = super(ShelterImporterTester, self)._get_data_from_url(url)
@@ -72,9 +75,9 @@ class ShelterImporterTester(ShelterImporter):
 
     def _get_animal(self, url):
         animal = super(ShelterImporterTester, self)._get_animal(url)
-        print "Testing animal data..."
+        print("Testing animal data...")
 
-        for key, test_value in self.data.ANIMALS[url].items():
+        for key, test_value in list(self.data.ANIMALS[url].items()):
 
             animal_data = animal.get_dict()
             val = animal_data[key] if key in animal_data else None
@@ -135,7 +138,7 @@ def test_generator_true(a):
 
 
 def generate_tests():
-    print "==Setting up..."
+    print("==Setting up...")
     for shelter in SHELTERS:
 
         if SHELTER_ID is not None and shelter['shelter_id'] != SHELTER_ID:
@@ -144,18 +147,18 @@ def generate_tests():
         for import_url in shelter['urls']:
             try:
                 importer = ShelterImporterTester(import_url, utils.name_from_url(import_url))
-                print importer
+                print(importer)
 
                 for animal in importer.iter_animals():
                     pass
                     # print "----Animal: %s" % animal
             except ImportError:
-                print "====== SKIPPING %s - no test data! ======" % import_url
+                print("====== SKIPPING %s - no test data! ======" % import_url)
             except StopShelterTestGeneration:
-                print "Stopping test generation for %s." % import_url
+                print("Stopping test generation for %s." % import_url)
             except Exception as e:
-                print "Error: %s" % e
-                print traceback.format_exc()
+                print("Error: %s" % e)
+                print(traceback.format_exc())
                 exit(1)
 
 
@@ -171,7 +174,7 @@ if __name__ == '__main__':
     # you can limit tests to only one shelter by adding a parameter with shelter ID
     if len(sys.argv) > 1:
         SHELTER_ID = int(sys.argv[1])
-        print "Set shelter_id to %d" % SHELTER_ID
+        print("Set shelter_id to %d" % SHELTER_ID)
         del sys.argv[1:]
 
     unittest.main(defaultTest='suite')

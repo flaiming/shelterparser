@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from builtins import object, next, str
 import sys
 import datetime
 import traceback
@@ -8,10 +12,10 @@ import lxml  # needed by BeautifulSoup with features="xml"
 import logging
 logger = logging.getLogger(__name__)
 
-from parsers import HtmlParser, RssParser, DetailParser
-from utils import unite_url
-from openers import Opener
-from enums import DataType, AnimalState
+from .parsers import HtmlParser, RssParser, DetailParser
+from .utils import unite_url
+from .openers import Opener
+from .enums import DataType, AnimalState, GenderType, CategoryType
 
 
 def setup_logger(logger, stream, filename=None, fmt=None):
@@ -38,10 +42,18 @@ SHELTERS = [
         "shelter_url": "http://www.mpb.cz/",
         "data_type": DataType.HTML,
         "urls": {
-            "http://www.mpb.cz/nalezeni-psi/": AnimalState.FOUND,
-            "http://www.mpb.cz/nalezene-kocky/": AnimalState.FOUND,
-            "http://www.mpb.cz/psi-k-adopci/": AnimalState.ADOPTION,
-            "http://www.mpb.cz/kocky-k-adopci/": AnimalState.ADOPTION,
+            "http://www.mpb.cz/nalezeni-psi/": {
+                "default": {'category': CategoryType.DOG, 'state': AnimalState.FOUND}
+            },
+            "http://www.mpb.cz/nalezene-kocky/": {
+                "default": {'category': CategoryType.CAT, 'state': AnimalState.FOUND}
+            },
+            "http://www.mpb.cz/psi-k-adopci/": {
+                "default": {'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
+            },
+            "http://www.mpb.cz/kocky-k-adopci/": {
+                "default": {'category': CategoryType.CAT, 'state': AnimalState.ADOPTION}
+            },
         }
     },
     {
@@ -50,7 +62,9 @@ SHELTERS = [
         "shelter_url": "http://nadace-tlapka.cz/",
         "data_type": DataType.HTML,
         "urls": {
-            "http://nadace-tlapka.cz/nabidka-zvirat/": AnimalState.ADOPTION,
+            "http://nadace-tlapka.cz/nabidka-zvirat/": {
+                "default": {'state': AnimalState.ADOPTION}
+            },
         }
     },
     {
@@ -59,11 +73,21 @@ SHELTERS = [
         "shelter_url": "http://www.zooliberec.cz/archa/",
         "data_type": DataType.HTML,
         "urls": {
-            "http://www.zooliberec.cz/archa/cz/utulek/psi/mali-psi": AnimalState.ADOPTION,
-            "http://www.zooliberec.cz/archa/cz/utulek/psi/velci-psi": AnimalState.ADOPTION,
-            "http://www.zooliberec.cz/archa/cz/utulek/psi/male-feny": AnimalState.ADOPTION,
-            "http://www.zooliberec.cz/archa/cz/utulek/psi/velke-feny": AnimalState.ADOPTION,
-            "http://www.zooliberec.cz/archa/cz/utulek/kocky/utulkova-nabidka": AnimalState.ADOPTION,
+            "http://www.zooliberec.cz/archa/cz/utulek/psi/mali-psi": {
+                "default": {'gender': GenderType.MALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
+            },
+            "http://www.zooliberec.cz/archa/cz/utulek/psi/velci-psi": {
+                "default": {'gender': GenderType.MALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
+            },
+            "http://www.zooliberec.cz/archa/cz/utulek/psi/male-feny": {
+                "default": {'gender': GenderType.FEMALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
+            },
+            "http://www.zooliberec.cz/archa/cz/utulek/psi/velke-feny": {
+                "default": {'gender': GenderType.FEMALE, 'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
+            },
+            "http://www.zooliberec.cz/archa/cz/utulek/kocky/utulkova-nabidka": {
+                "default": {'category': CategoryType.CAT, 'state': AnimalState.ADOPTION}
+            },
         }
     },
     {
@@ -72,7 +96,9 @@ SHELTERS = [
         "shelter_url": "http://azylpes.cz/",
         "data_type": DataType.HTML,
         "urls": {
-            "http://azylpes.cz/zvirata": AnimalState.ADOPTION,
+            "http://azylpes.cz/zvirata": {
+                "default": {'state': AnimalState.ADOPTION}
+            },
         }
     },
     {
@@ -81,7 +107,9 @@ SHELTERS = [
         "shelter_url": "http://www.utulekpropsy.org/",
         "data_type": DataType.HTML,
         "urls": {
-            "http://www.utulekpropsy.org/nabidka-psu.html": AnimalState.ADOPTION,
+            "http://www.utulekpropsy.org/nabidka-psu/": {
+                "default": {'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
+            },
         }
     },
     {
@@ -90,7 +118,9 @@ SHELTERS = [
         "shelter_url": "http://www.pejsciklasterec.cz/",
         "data_type": DataType.HTML,
         "urls": {
-            "http://www.pejsciklasterec.cz/index.php/nabidka-pejsku/aktualne-v-utulku": AnimalState.ADOPTION,
+            "http://www.pejsciklasterec.cz/index.php/nabidka-pejsku/aktualne-v-utulku": {
+                "default": {'category': CategoryType.DOG, 'state': AnimalState.ADOPTION}
+            },
         }
     },
 ]
@@ -98,8 +128,9 @@ SHELTERS = [
 
 class ShelterImporter(object):
 
-    def __init__(self, url):
+    def __init__(self, url, default=None):
         self.url = url
+        self.default = default if default else {}
 
     def iter_animals(self, from_date=None):
         for detail_url in self._iter_detail_urls():
@@ -121,7 +152,11 @@ class ShelterImporter(object):
         html = self._get_data_from_url(url)
         detail = DetailParser(html, url)
         animal = detail.get_animal()
-        animal.set('url', url)
+        animal.set('url', str(url))
+
+        # set default data
+        for key, val in list(self.default.items()):
+            animal.set(key, val)
         return animal
 
     def _iter_detail_urls(self, first_page_only=False):
@@ -167,22 +202,23 @@ class AnimalImporter(object):
 
     def iter_animals(self):
         for shelter in SHELTERS:
-            for import_url, animal_state in shelter['urls'].items():
-                importer = ShelterImporter(import_url)
+            for import_url, params in list(shelter['urls'].items()):
+                default = params['default'] if 'default' in params else {}
+                importer = ShelterImporter(import_url, default=default)
                 logger.debug("Started importer: %s", importer)
 
                 animal_generator = importer.iter_animals(self.from_date)
                 while True:
                     try:
-                        animal = next(animal_generator)
+                        animal = animal_generator.next()
                         animal['shelter_id'] = shelter['shelter_id']
-                        animal['state'] = animal_state
+                        #animal['state'] = params['state']
                         yield animal
                     except StopIteration:
                         logger.debug("Catched StopIteration.")
                         break
                     except Exception:
-                        logger.exception("!!! Catched exceptioni !!!")
+                        logger.exception("!!! Catched exception !!!")
                         if self.throw_exceptions:
                             raise
 
@@ -208,18 +244,18 @@ def main():
             parts = from_date.split('-')
             from_date = datetime.datetime(int(parts[0]), int(parts[1]), int(parts[2]))
         except:
-            print "Wrong date! Use format YYYY-MM-DD"
+            print("Wrong date! Use format YYYY-MM-DD")
             return False
     else:
-        print """
+        print("""
         Please run with date from which you want animals
         $ importers.py YYYY-MM-DD
-        """
+        """)
         return False
 
     importer = AnimalImporter(from_date)
     for animal in importer.iter_animals():
-        print "---Animal: %s" % animal
+        print("Animal: %s" % animal)
 
     # opener = TarGzOpener('./test_data/kocky-online.cz/data.tar.gz', "windows-1250")
     # importer = KockyOnlineImporter(opener)

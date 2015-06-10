@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from __future__ import absolute_import
+from __future__ import division
+from builtins import next
+from builtins import str
+from builtins import range
+from past.utils import old_div
+from builtins import object
 import re
-from itertools import cycle, islice
+from itertools import cycle, islice, chain, izip_longest
 from bs4 import BeautifulSoup
 import datetime
 import feedparser
@@ -8,12 +16,12 @@ import difflib
 import logging
 logger = logging.getLogger(__name__)
 
-from enums import CategoryType, resolve_gender_and_category
-from models import AnimalModel
-import utils
+from .enums import CategoryType, resolve_gender_and_category
+from .models import AnimalModel
+from . import utils
 
 
-class Accuracy():
+class Accuracy(object):
     LOW = 0
     NORMAL = 5
     HIGH = 10
@@ -58,8 +66,6 @@ class GenericParser(object):
         for e in list(elements):
             if e:
                 parent_list.append(list(e.parents)[:5])
-        # logger.debug("parent list: %s" % repr(parent_list))
-        # logger.debug("Parent list count: %d" % len(parent_list))
         for x in range(len(parent_list)):
             for y in range(len(parent_list[x])):
                 successes = 0
@@ -181,7 +187,7 @@ class HtmlParser(GenericParser):
     def get_urls(self):
         links = []
         # first try - find links by searching for "Zobrazit vice" etc.
-        for link in self.soup.find_all('a', text=re.compile(ur'^\s*(?:zobrazit více|více informací|Detail)\s*', flags=re.I | re.U)):
+        for link in self.soup.find_all('a', text=re.compile(ur'^\s*(?:zobrazit více|více informací|Detail|Číst dál)\s*', flags=re.I | re.U)):
             if self._check_link(link):
                 links.append(link)
 
@@ -197,7 +203,7 @@ class HtmlParser(GenericParser):
             )
             # logger.debug("Siblings: %s" % links)
         # logger.debug("Links: %s" % links)
-        return map(lambda x: x['href'], links)
+        return [x['href'] for x in links]
 
     def get_pages(self):
         siblings = self._filter_siblings(
@@ -234,7 +240,7 @@ class RssParser(GenericParser):
         return [self.url]
 
 
-RE_DEVIDER = ur'\s*:?\s*(?:<[^>]+>\s*){0,4}\s*:?\s*'
+RE_DEVIDER = r'\s*:?\s*(?:<[^>]+>\s*){0,4}\s*:?\s*'
 
 
 class DetailParser(GenericParser):
@@ -286,15 +292,16 @@ class DetailParser(GenericParser):
                         # try recursive strategy
                         name = heading.get_text()
                 if name:
-                    name = unicode(name)
+                    name = str(name)
                     break
         return name.strip()
 
     def get_reg_num(self):
-        result = re.findall(ur'\b(?:Evidenční číslo|ev.č.)' + RE_DEVIDER + ur'([\w\d/_ -]+)', self.html, flags=re.I | re.U)
+        result = re.findall(r'\b(?:Evidenční číslo|ev.č.)' + RE_DEVIDER + r'([\w\d/_ -]+)', self.html, flags=re.I)
         reg_num = ""
         if result:
             reg_num = result[0].strip()
+            reg_num = str(reg_num)
         return reg_num
 
     def get_chip_num(self):
@@ -336,7 +343,7 @@ class DetailParser(GenericParser):
         if result:
             raw_gender = result[0].strip()
             gender, self.category = resolve_gender_and_category(raw_gender)
-        return gender
+        return str(gender)
 
     def get_category(self):
         if self.category:
@@ -347,7 +354,7 @@ class DetailParser(GenericParser):
             if self.category:
                 return self.category
             else:
-                result = re.findall(ur'Druh' + RE_DEVIDER + ur'(\w+)', unicode(self.html), flags=re.U | re.I)
+                result = re.findall(ur'Druh' + RE_DEVIDER + ur'(\w+)', str(self.html), flags=re.U | re.I)
                 if result:
                     raw_category = result[0].strip()
                     self.category = CategoryType.resolve_category(raw_category)
@@ -374,7 +381,7 @@ class DetailParser(GenericParser):
                 if result:
                     parts = result[0].split(u'-')
                     try:
-                        age = (int(parts[0]) + int(parts[1])) / 2.0
+                        age = old_div((int(parts[0]) + int(parts[1])), 2.0)
                     except ValueError:
                         pass
             elif re.search(ur'\d+(?:(?:\.|/)\d+){1,2}', raw_age):
@@ -404,7 +411,7 @@ class DetailParser(GenericParser):
         return birth_date
 
     def get_colour(self):
-        result = re.findall(ur'Barva' + RE_DEVIDER + ur'([\w\d,._ -]+)', unicode(self.html), flags=re.U | re.I)
+        result = re.findall(ur'Barva' + RE_DEVIDER + ur'([\w\d,._ -]+)', str(self.html), flags=re.U | re.I)
         colour = ""
         if result:
             colour = result[0].strip()
@@ -451,14 +458,14 @@ class DetailParser(GenericParser):
         return note
 
     def get_castrated(self):
-        result = re.findall(ur'Kastrace' + RE_DEVIDER + ur'(\w+)', unicode(self.html), flags=re.U | re.I)
+        result = re.findall(ur'Kastrace' + RE_DEVIDER + ur'(\w+)', str(self.html), flags=re.U | re.I)
         castrated = None
         if result:
             castrated = utils.parse_bool(result[0].strip())
         return castrated
 
     def get_breed(self):
-        result = re.findall(ur'(?:Rasa|Plemeno)\b' + RE_DEVIDER + ur'([\w,. -]+)', unicode(self.html), flags=re.U | re.I)
+        result = re.findall(ur'(?:Rasa|Plemeno)\b' + RE_DEVIDER + ur'([\w,. -]+)', str(self.html), flags=re.U | re.I)
         breed = ""
         if result:
             breed = result[0].strip()
@@ -495,14 +502,5 @@ class DetailParser(GenericParser):
 
 
 def roundrobin(*iterables):
-    """roundrobin('ABC', 'D', 'EF') --> A D E B F C"""
-    # Recipe credited to George Sakkis
-    pending = len(iterables)
-    nexts = cycle(iter(it).next for it in iterables)
-    while pending:
-        try:
-            for next in nexts:
-                yield next()
-        except StopIteration:
-            pending -= 1
-            nexts = cycle(islice(nexts, pending))
+    sentinel = object()
+    return (x for x in chain(*izip_longest(fillvalue=sentinel, *iterables)) if x is not sentinel)

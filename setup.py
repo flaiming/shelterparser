@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name="shelterparser",
-    version="0.1.0",
+    version="0.1.1",
     author="Vojtech Oram",
     author_email="vojtech@oram.cz",
     description=("Module for parsing data about animals from animal shelters webpages."),
@@ -20,8 +20,12 @@ setup(
     keywords = "animal shelter parser",
     packages=['shelterparser', 'tests'],
     long_description=read('README.md'),
+    zip_safe=False,
     classifiers=[
         "Development Status :: Alpha",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.4",
         "Topic :: Utilities",
     ],
 )
