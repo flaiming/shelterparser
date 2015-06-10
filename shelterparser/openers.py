@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import urllib2
+import logging
+logger = logging.getLogger(__name__)
 from bs4 import BeautifulSoup
 
 from decorators import retry
@@ -20,7 +22,7 @@ class Opener(object):
     def get_content_type(self):
         return self.content_type
 
-    @retry(IOError)
+    @retry(IOError, logger=logger)
     def _universal_opener(self):
         data = ""
         if self.path.startswith('http'):

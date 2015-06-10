@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import datetime
 import feedparser
 import difflib
+import logging
+logger = logging.getLogger(__name__)
 
 from enums import CategoryType, resolve_gender_and_category
 from models import AnimalModel
@@ -52,12 +54,12 @@ class GenericParser(object):
         Pretty inefficient and dirty solution, should be remaked in the future.
         """
         parent_list = []
-        # print "Found elements: %s" % repr(list(elements))
+        # logger.debug("Found elements: %s" % repr(list(elements)))
         for e in list(elements):
             if e:
                 parent_list.append(list(e.parents)[:5])
-        #print "parent list: %s" % repr(parent_list)
-        #print "Parent list count: %d" % len(parent_list)
+        # logger.debug("parent list: %s" % repr(parent_list))
+        # logger.debug("Parent list count: %d" % len(parent_list))
         for x in range(len(parent_list)):
             for y in range(len(parent_list[x])):
                 successes = 0
@@ -97,7 +99,7 @@ class GenericParser(object):
         if not hasattr(elem, 'name'):
             # element is probably string
             return []
-        # print "Element: %s" % elem.name
+        # logger.debug("Element: %s" % elem.name)
         if elem.name == tag:
             if id_name == "" or elem['id'] == id_name:
                 if tag == "" or (elem.has_attr('class') and class_name in elem['class']):
@@ -169,9 +171,9 @@ class HtmlParser(GenericParser):
         if link['href'].startswith('http'):
             domain = utils.get_domain_from_url(link['href'])
             shelter_domain = utils.get_domain_from_url(self.url)
-            # print "Comparing domains: %s vs %s" % (domain, shelter_domain)
+            # logger.debug("Comparing domains: %s vs %s" % (domain, shelter_domain))
             if domain != shelter_domain:
-                # print "Discarding link %s" % link
+                # logger.debug("Discarding link %s" % link)
                 return False
         # remove relative links, like "./"
         return not re.match(r'\./', link['href'])
@@ -193,8 +195,8 @@ class HtmlParser(GenericParser):
                 links,
                 max_parent_depth=6
             )
-            # print "Siblings: %s" % links
-        # print "Links: %s" % links
+            # logger.debug("Siblings: %s" % links)
+        # logger.debug("Links: %s" % links)
         return map(lambda x: x['href'], links)
 
     def get_pages(self):

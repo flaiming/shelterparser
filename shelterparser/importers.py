@@ -5,11 +5,30 @@ import datetime
 import traceback
 from bs4 import BeautifulSoup
 import lxml  # needed by BeautifulSoup with features="xml"
+import logging
+logger = logging.getLogger(__name__)
 
 from parsers import HtmlParser, RssParser, DetailParser
 from utils import unite_url
 from openers import Opener
 from enums import DataType, AnimalState
+
+
+def setup_logger(logger, stream, filename=None, fmt=None):
+    """Sets up a logger (if no handlers exist) for console output,
+    and file 'tee' output if desired."""
+    if len(logger.handlers) < 1:
+        console = logging.StreamHandler(stream)
+        console.setLevel(logging.DEBUG)
+        console.setFormatter(logging.Formatter(fmt))
+        logger.addHandler(console)
+        logger.setLevel(logging.DEBUG)
+
+        if filename:
+            outfile = logging.FileHandler(filename)
+            outfile.setLevel(logging.INFO)
+            outfile.setFormatter(logging.Formatter("%(asctime)s " + (fmt if fmt else '%(message)s')))
+            logger.addHandler(outfile)
 
 
 SHELTERS = [
@@ -84,19 +103,19 @@ class ShelterImporter(object):
 
     def iter_animals(self, from_date=None):
         for detail_url in self._iter_detail_urls():
-            print "Detail url: %s" % (detail_url,)
+            logger.debug("Detail url: %s" % (detail_url,))
             animal = self._get_animal(detail_url)
 
             if animal.is_satisfactory():
                 if from_date is not None and not isinstance(from_date, datetime.date):
                     raise Exception("Parameter from_date is not instance of datetime.date!")
                 elif from_date is not None and animal.get('date_created').date() < from_date:
-                    print "Animal has been already imported (created %s)" % animal.get('date_created')
+                    logger.debug("Animal has been already imported (created %s)" % animal.get('date_created'))
                     return
                 else:
                     yield animal.get_dict()
             else:
-                print "Animal data not satisfactory --> skipping. %s" % animal.get_dict()
+                logger.debug("Animal data not satisfactory --> skipping. %s" % animal.get_dict())
 
     def _get_animal(self, url):
         html = self._get_data_from_url(url)
@@ -111,7 +130,7 @@ class ShelterImporter(object):
             if page_url != self.url:
                 # init parser for new page
                 parser = self._get_parser(page_url)
-            print "Opened page url: '%s'" % page_url
+            logger.debug("Opened page url: '%s'" % page_url)
             for detail_url in parser.get_urls():
                 yield unite_url(self.url, detail_url)
             if first_page_only:
@@ -150,7 +169,7 @@ class AnimalImporter(object):
         for shelter in SHELTERS:
             for import_url, animal_state in shelter['urls'].items():
                 importer = ShelterImporter(import_url)
-                print importer
+                logger.debug("Started importer: %s", importer)
 
                 animal_generator = importer.iter_animals(self.from_date)
                 while True:
@@ -160,11 +179,10 @@ class AnimalImporter(object):
                         animal['state'] = animal_state
                         yield animal
                     except StopIteration:
-                        print "Catched StopIteration."
+                        logger.debug("Catched StopIteration.")
                         break
-                    except Exception as e:
-                        print "===== Catched exception: %s" % e
-                        print traceback.format_exc()
+                    except Exception:
+                        logger.exception("!!! Catched exceptioni !!!")
                         if self.throw_exceptions:
                             raise
 
@@ -180,6 +198,9 @@ class AnimalImporter(object):
 
 
 def main():
+
+    setup_logger(logger, sys.stdout)
+
     from_date = datetime.datetime.now()
     if len(sys.argv) >= 2:
         from_date = sys.argv[1]
